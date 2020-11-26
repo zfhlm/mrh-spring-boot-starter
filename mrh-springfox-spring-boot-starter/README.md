@@ -1,2 +1,2 @@
 # mrh-springfox-spring-boot-starter
-springfox API文档工具扩展
+springfox API文档扩展

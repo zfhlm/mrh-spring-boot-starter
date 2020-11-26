@@ -1,8 +1,8 @@
-package org.lushen.mrh.sequence.single;
+package org.lushen.mrh.boot.sequence.single;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.lushen.mrh.sequence.SequenceGenerator;
+import org.lushen.mrh.boot.sequence.SequenceGenerator;
 
 /**
  * 递增序列生成器

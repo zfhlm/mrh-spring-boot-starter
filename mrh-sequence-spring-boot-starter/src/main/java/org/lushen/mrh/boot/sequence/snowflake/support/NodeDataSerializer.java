@@ -1,6 +1,6 @@
-package org.lushen.mrh.sequence.snowflake.support;
+package org.lushen.mrh.boot.sequence.snowflake.support;
 
-import org.lushen.mrh.sequence.snowflake.SnowflakePayload;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakePayload;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

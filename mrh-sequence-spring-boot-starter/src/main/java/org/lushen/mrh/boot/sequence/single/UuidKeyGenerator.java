@@ -1,8 +1,8 @@
-package org.lushen.mrh.sequence.single;
+package org.lushen.mrh.boot.sequence.single;
 
 import java.util.UUID;
 
-import org.lushen.mrh.sequence.KeyGenerator;
+import org.lushen.mrh.boot.sequence.KeyGenerator;
 
 /**
  * UUID key生成器

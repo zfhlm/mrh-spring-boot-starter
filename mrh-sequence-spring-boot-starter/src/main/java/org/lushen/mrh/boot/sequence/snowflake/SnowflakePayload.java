@@ -1,4 +1,4 @@
-package org.lushen.mrh.sequence.snowflake;
+package org.lushen.mrh.boot.sequence.snowflake;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package org.lushen.mrh.sequence;
+package org.lushen.mrh.boot.sequence;
 
 /**
  * 序列生成器

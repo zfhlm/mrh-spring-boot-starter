@@ -1,4 +1,4 @@
-package org.lushen.mrh.sequence.snowflake;
+package org.lushen.mrh.boot.sequence.snowflake;
 
 /**
  * snowflake 信息到注册中心之前调用此接口

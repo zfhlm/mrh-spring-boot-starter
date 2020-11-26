@@ -1,13 +1,13 @@
-package org.lushen.mrh.sequence.snowflake;
+package org.lushen.mrh.boot.sequence.snowflake;
 
-import static org.lushen.mrh.sequence.snowflake.SnowflakeWorker.blockMoveState;
+import static org.lushen.mrh.boot.sequence.snowflake.SnowflakeWorker.blockMoveState;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.lushen.mrh.sequence.SequenceGenerator;
+import org.lushen.mrh.boot.sequence.SequenceGenerator;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 

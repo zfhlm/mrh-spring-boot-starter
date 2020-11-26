@@ -1,4 +1,4 @@
-package org.lushen.mrh.sequence.snowflake;
+package org.lushen.mrh.boot.sequence.snowflake;
 
 /**
  * 雪花ID生成实现

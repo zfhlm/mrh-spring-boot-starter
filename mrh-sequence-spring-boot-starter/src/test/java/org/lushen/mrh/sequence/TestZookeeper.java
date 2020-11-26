@@ -3,9 +3,9 @@ package org.lushen.mrh.sequence;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryForever;
-import org.lushen.mrh.sequence.snowflake.SnowflakeGenerator;
-import org.lushen.mrh.sequence.snowflake.SnowflakeProperties;
-import org.lushen.mrh.sequence.snowflake.factory.SnowflakeCuratorFactory;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeGenerator;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeProperties;
+import org.lushen.mrh.boot.sequence.snowflake.factory.SnowflakeCuratorFactory;
 
 public class TestZookeeper {
 

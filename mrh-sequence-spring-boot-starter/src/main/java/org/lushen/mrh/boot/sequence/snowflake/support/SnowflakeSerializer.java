@@ -1,4 +1,4 @@
-package org.lushen.mrh.sequence.snowflake.support;
+package org.lushen.mrh.boot.sequence.snowflake.support;
 
 /**
  * snowflake 序列化接口

@@ -12,7 +12,7 @@
 		
 		②，如果存在 RedisConnectionFactory 客户端，自动使用redis作为注册中心
 		
-		③，可以自定义注册中心实现 org.lushen.mrh.sequence.snowflake.SnowflakeFactory，然后配置为bean即可
+		③，可以自定义注册中心实现 org.lushen.mrh.boot.sequence.snowflake.SnowflakeFactory，然后配置为bean即可
 
 ##### 简单集成
 

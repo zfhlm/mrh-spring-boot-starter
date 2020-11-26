@@ -1,20 +1,20 @@
-package org.lushen.mrh.sequence.snowflake.factory;
+package org.lushen.mrh.boot.sequence.snowflake.factory;
 
-import static org.lushen.mrh.sequence.snowflake.SnowflakeWorker.maxCenterId;
-import static org.lushen.mrh.sequence.snowflake.SnowflakeWorker.maxWorkerId;
+import static org.lushen.mrh.boot.sequence.snowflake.SnowflakeWorker.maxCenterId;
+import static org.lushen.mrh.boot.sequence.snowflake.SnowflakeWorker.maxWorkerId;
 
 import java.util.LinkedHashMap;
 import java.util.stream.IntStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.lushen.mrh.sequence.snowflake.SnowflakeConsumer;
-import org.lushen.mrh.sequence.snowflake.SnowflakeFactory;
-import org.lushen.mrh.sequence.snowflake.SnowflakeProperties;
-import org.lushen.mrh.sequence.snowflake.SnowflakeWorker;
-import org.lushen.mrh.sequence.snowflake.support.NodeDataSerializer;
-import org.lushen.mrh.sequence.snowflake.support.NodePathSerializer;
-import org.lushen.mrh.sequence.snowflake.support.NodePathSerializer.Node;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeConsumer;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeFactory;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeProperties;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeWorker;
+import org.lushen.mrh.boot.sequence.snowflake.support.NodeDataSerializer;
+import org.lushen.mrh.boot.sequence.snowflake.support.NodePathSerializer;
+import org.lushen.mrh.boot.sequence.snowflake.support.NodePathSerializer.Node;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

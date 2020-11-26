@@ -1,10 +1,10 @@
-package org.lushen.mrh.sequence.snowflake.factory;
+package org.lushen.mrh.boot.sequence.snowflake.factory;
 
 import static org.apache.curator.framework.recipes.cache.TreeCacheEvent.Type.NODE_ADDED;
 import static org.apache.curator.framework.recipes.cache.TreeCacheEvent.Type.NODE_REMOVED;
 import static org.apache.curator.framework.recipes.cache.TreeCacheEvent.Type.NODE_UPDATED;
-import static org.lushen.mrh.sequence.snowflake.SnowflakeWorker.maxCenterId;
-import static org.lushen.mrh.sequence.snowflake.SnowflakeWorker.maxWorkerId;
+import static org.lushen.mrh.boot.sequence.snowflake.SnowflakeWorker.maxCenterId;
+import static org.lushen.mrh.boot.sequence.snowflake.SnowflakeWorker.maxWorkerId;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -20,14 +20,14 @@ import org.apache.curator.framework.recipes.cache.TreeCacheEvent;
 import org.apache.curator.framework.recipes.cache.TreeCacheListener;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.zookeeper.CreateMode;
-import org.lushen.mrh.sequence.snowflake.SnowflakeConsumer;
-import org.lushen.mrh.sequence.snowflake.SnowflakeFactory;
-import org.lushen.mrh.sequence.snowflake.SnowflakePayload;
-import org.lushen.mrh.sequence.snowflake.SnowflakeProperties;
-import org.lushen.mrh.sequence.snowflake.SnowflakeWorker;
-import org.lushen.mrh.sequence.snowflake.support.NodeDataSerializer;
-import org.lushen.mrh.sequence.snowflake.support.NodePathSerializer;
-import org.lushen.mrh.sequence.snowflake.support.NodePathSerializer.Node;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeConsumer;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeFactory;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakePayload;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeProperties;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeWorker;
+import org.lushen.mrh.boot.sequence.snowflake.support.NodeDataSerializer;
+import org.lushen.mrh.boot.sequence.snowflake.support.NodePathSerializer;
+import org.lushen.mrh.boot.sequence.snowflake.support.NodePathSerializer.Node;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 

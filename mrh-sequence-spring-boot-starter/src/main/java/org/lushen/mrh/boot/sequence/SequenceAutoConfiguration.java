@@ -1,15 +1,15 @@
-package org.lushen.mrh.sequence;
+package org.lushen.mrh.boot.sequence;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.curator.framework.CuratorFramework;
-import org.lushen.mrh.sequence.single.SequenceKeyGenerator;
-import org.lushen.mrh.sequence.single.UuidKeyGenerator;
-import org.lushen.mrh.sequence.snowflake.SnowflakeConsumer;
-import org.lushen.mrh.sequence.snowflake.SnowflakeFactory;
-import org.lushen.mrh.sequence.snowflake.SnowflakeGenerator;
-import org.lushen.mrh.sequence.snowflake.SnowflakeProperties;
-import org.lushen.mrh.sequence.snowflake.factory.SnowflakeCuratorFactory;
+import org.lushen.mrh.boot.sequence.single.SequenceKeyGenerator;
+import org.lushen.mrh.boot.sequence.single.UuidKeyGenerator;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeConsumer;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeFactory;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeGenerator;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeProperties;
+import org.lushen.mrh.boot.sequence.snowflake.factory.SnowflakeCuratorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -25,9 +25,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableConfigurationProperties
-public class BootAutoConfiguration {
+public class SequenceAutoConfiguration {
 
-	private static final Log log = LogFactory.getLog(BootAutoConfiguration.class);
+	private static final Log log = LogFactory.getLog(SequenceAutoConfiguration.class);
 
 	@Bean
 	@ConditionalOnMissingBean(KeyGenerator.class)

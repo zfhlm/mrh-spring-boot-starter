@@ -1,4 +1,4 @@
-package org.lushen.mrh.sequence.snowflake.support;
+package org.lushen.mrh.boot.sequence.snowflake.support;
 
 /**
  * 注册路径序列化工具

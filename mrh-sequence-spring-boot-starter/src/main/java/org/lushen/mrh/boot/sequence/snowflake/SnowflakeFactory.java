@@ -1,4 +1,4 @@
-package org.lushen.mrh.sequence.snowflake;
+package org.lushen.mrh.boot.sequence.snowflake;
 
 /**
  * snowflake worker 工厂

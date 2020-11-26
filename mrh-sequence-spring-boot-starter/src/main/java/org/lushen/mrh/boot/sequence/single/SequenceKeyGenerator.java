@@ -1,7 +1,7 @@
-package org.lushen.mrh.sequence.single;
+package org.lushen.mrh.boot.sequence.single;
 
-import org.lushen.mrh.sequence.KeyGenerator;
-import org.lushen.mrh.sequence.SequenceGenerator;
+import org.lushen.mrh.boot.sequence.KeyGenerator;
+import org.lushen.mrh.boot.sequence.SequenceGenerator;
 
 /**
  * 序列key生成器

@@ -1,0 +1,8 @@
+
+# Auto Configure
+
+org.lushen.mrh.boot.crypto.CryptoAutoConfiguration=\
+org.lushen.mrh.boot.crypto.CryptoAutoConfiguration
+
+org.lushen.mrh.boot.crypto.TokenAutoConfiguration=\
+org.lushen.mrh.boot.crypto.TokenAutoConfiguration

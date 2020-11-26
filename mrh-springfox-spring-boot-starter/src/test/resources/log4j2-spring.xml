@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+
+	<Properties>
+		<Property name="log.file.directory" value="/usr/local/logs/jpa"/>
+		<Property name="log.file.max-size" value="500 MB"/>
+		<Property name="log.output.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
+	</Properties>
+
+	<Appenders>
+		<Console name="ConsoleAppender" target="SYSTEM_OUT">
+			<PatternLayout pattern="${log.output.pattern}" />
+		</Console>
+	</Appenders>
+
+	<Loggers>
+
+		<Logger name="io.netty" level="info"/>
+		<Logger name="org.apache" level="info"/>
+		<Logger name="org.springframework" level="info"/>
+		
+		<Root level="info">
+			<AppenderRef ref="ConsoleAppender"/>
+		</Root>
+
+	</Loggers>
+
+</Configuration>

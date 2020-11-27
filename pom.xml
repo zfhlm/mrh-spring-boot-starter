@@ -47,6 +47,7 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- https://github.com/zfhlm/mrh-supports -->
 			<dependency>
 				<groupId>org.lushen.mrh</groupId>
 				<artifactId>mrh-supports</artifactId>

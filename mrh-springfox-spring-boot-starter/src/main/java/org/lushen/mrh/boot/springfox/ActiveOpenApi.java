@@ -59,7 +59,7 @@ public @interface ActiveOpenApi {
 
 				// spring未开启静态资源映射
 				if( ! environment.getProperty("spring.resources.add-mappings", Boolean.TYPE, true) ) {
-					log.warn("the application property [spring.resources.add-mappings] is false, unable to configure expanded-swagger2 ! ");
+					log.warn("the application property [spring.resources.add-mappings] is false, unable to configure springfox ! ");
 					return;
 				}
 

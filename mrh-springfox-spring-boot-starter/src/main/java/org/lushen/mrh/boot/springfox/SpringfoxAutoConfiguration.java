@@ -1,6 +1,8 @@
 package org.lushen.mrh.boot.springfox;
 
+import java.text.SimpleDateFormat;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import org.lushen.mrh.boot.springfox.annotation.Doc;
 import org.lushen.mrh.boot.springfox.plugin.DocPlugin;
@@ -18,6 +20,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.classmate.TypeResolver;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +33,7 @@ import springfox.documentation.oas.configuration.OpenApiDocumentationConfigurati
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.json.JacksonModuleRegistrar;
 import springfox.documentation.spring.web.plugins.Docket;
 
 /**
@@ -81,6 +87,26 @@ public class SpringfoxAutoConfiguration {
 		return new DocPlugin(typeResolver);
 	}
 
+	@Bean
+	public JacksonPlugin jacksonPlugin() {
+		return new JacksonPlugin();
+	}
+
+	@Bean
+	public JacksonModuleRegistrar jacksonModuleRegistrar() {
+		return new JacksonModuleRegistrar() {
+			@Override
+			public void maybeRegisterModule(ObjectMapper objectMapper) {
+				objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+				objectMapper.setSerializationInclusion(Include.NON_NULL);
+				objectMapper.setVisibility(PropertyAccessor.GETTER, Visibility.NONE);
+				objectMapper.setVisibility(PropertyAccessor.SETTER, Visibility.NONE);
+				objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+				objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+			}
+		};
+	}
+
 	@Configuration
 	@ConditionalOnClass(GenericEnum.class)
 	public static class GenericEnumConfiguration {
@@ -88,17 +114,6 @@ public class SpringfoxAutoConfiguration {
 		@Bean
 		public GenericEnumPlugin genericEnumPlugin() {
 			return new GenericEnumPlugin();
-		}
-
-	}
-
-	@Configuration
-	@ConditionalOnClass(ObjectMapper.class)
-	public static class JacksonConfiguration {
-
-		@Bean
-		public JacksonPlugin jacksonPlugin() {
-			return new JacksonPlugin();
 		}
 
 	}

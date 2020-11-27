@@ -2,6 +2,10 @@
 
 ------------------------------------
 
+##### springboot官方starter扩展自动配置组件：
+
+[mrh-autoconfigure-spring-boot-starter](https://github.com/zfhlm/mrh-spring-boot-starter/tree/main/mrh-autoconfigure-spring-boot-starter)
+
 ##### 加解密、登录令牌组件：
 
 [mrh-crypto-spring-boot-starter](https://github.com/zfhlm/mrh-spring-boot-starter/tree/main/mrh-crypto-spring-boot-starter)

@@ -1,0 +1,12 @@
+
+# Listener
+org.lushen.mrh.boot.autoconfigure.ApplicationListener=\
+org.lushen.mrh.boot.autoconfigure.ApplicationEnvironmentListener
+
+# Auto Configure
+org.lushen.mrh.boot.autoconfigure.AutoConfiguration=\
+org.lushen.mrh.boot.autoconfigure.cache.CacheAutoConfiguration,\
+org.lushen.mrh.boot.autoconfigure.generic.GenericEnumAutoConfiguration,\
+org.lushen.mrh.boot.autoconfigure.jdbc.JdbcTransactionAutoConfiguration,\
+org.lushen.mrh.boot.autoconfigure.jackson.JacksonAutoConfiguration,\
+org.lushen.mrh.boot.autoconfigure.validation.ValidationAutoConfiguration

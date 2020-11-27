@@ -20,7 +20,7 @@ import org.apache.curator.framework.recipes.cache.TreeCacheEvent;
 import org.apache.curator.framework.recipes.cache.TreeCacheListener;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.zookeeper.CreateMode;
-import org.lushen.mrh.boot.sequence.snowflake.SnowflakeConsumer;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeCustomizer;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeFactory;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakePayload;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeProperties;
@@ -52,16 +52,16 @@ public class SnowflakeCuratorFactory implements SnowflakeFactory, InitializingBe
 
 	private final Long liveTimeMillis;
 
-	private final SnowflakeConsumer consumer;
+	private final SnowflakeCustomizer customizer;
 
 	private TreeCache treeCache;
 
-	public SnowflakeCuratorFactory(CuratorFramework client, SnowflakeProperties properties, SnowflakeConsumer consumer) {
+	public SnowflakeCuratorFactory(CuratorFramework client, SnowflakeProperties properties, SnowflakeCustomizer customizer) {
 		super();
 		this.client = client;
 		this.basePath = properties.getBasePath();
 		this.liveTimeMillis = properties.getLiveTimeMillis();
-		this.consumer = consumer;
+		this.customizer = customizer;
 	}
 
 	@Override
@@ -158,7 +158,7 @@ public class SnowflakeCuratorFactory implements SnowflakeFactory, InitializingBe
 							payload.setBeginAt(currentTime);
 							payload.setExpiredAt(currentTime + this.liveTimeMillis);
 							payload.setUpdateAt(currentTime);
-							this.consumer.consume(payload);
+							this.customizer.customize(payload);
 							this.client.setData().forPath(fullPath, this.nodeDataSerializer.serialize(payload));
 							log.info("Subject payload : " + payload);
 							return new SnowflakeWorker(payload);
@@ -168,7 +168,7 @@ public class SnowflakeCuratorFactory implements SnowflakeFactory, InitializingBe
 							payload.setExpiredAt(currentTime + this.liveTimeMillis);
 							payload.setCreateAt(currentTime);
 							payload.setUpdateAt(currentTime);
-							this.consumer.consume(payload);
+							this.customizer.customize(payload);
 							this.client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(fullPath, this.nodeDataSerializer.serialize(payload));
 							log.info("Register payload : " + payload);
 							return new SnowflakeWorker(payload);

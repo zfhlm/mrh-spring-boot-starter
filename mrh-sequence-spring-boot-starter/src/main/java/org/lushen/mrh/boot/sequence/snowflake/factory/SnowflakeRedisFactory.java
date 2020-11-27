@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.lushen.mrh.boot.sequence.snowflake.SnowflakeConsumer;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeCustomizer;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeFactory;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeProperties;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeWorker;
@@ -38,16 +38,16 @@ public class SnowflakeRedisFactory implements SnowflakeFactory, InitializingBean
 
 	private final Long liveTimeMillis;
 
-	private final SnowflakeConsumer consumer;
+	private final SnowflakeCustomizer customizer;
 
 	private final RedisConnectionFactory connectionFactory;
 
-	public SnowflakeRedisFactory(RedisConnectionFactory connectionFactory, SnowflakeProperties properties, SnowflakeConsumer consumer) {
+	public SnowflakeRedisFactory(RedisConnectionFactory connectionFactory, SnowflakeProperties properties, SnowflakeCustomizer customizer) {
 		super();
 		this.connectionFactory = connectionFactory;
 		this.basePath = properties.getBasePath();
 		this.liveTimeMillis = properties.getLiveTimeMillis();
-		this.consumer = consumer;
+		this.customizer = customizer;
 	}
 
 	@Override

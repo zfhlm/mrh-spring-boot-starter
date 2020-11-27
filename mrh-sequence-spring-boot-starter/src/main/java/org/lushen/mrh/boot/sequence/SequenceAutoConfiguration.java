@@ -5,7 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.curator.framework.CuratorFramework;
 import org.lushen.mrh.boot.sequence.single.SequenceKeyGenerator;
 import org.lushen.mrh.boot.sequence.single.UuidKeyGenerator;
-import org.lushen.mrh.boot.sequence.snowflake.SnowflakeConsumer;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeCustomizer;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeFactory;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeGenerator;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeProperties;
@@ -45,8 +45,8 @@ public class SequenceAutoConfiguration {
 
 	@Bean
 	@ConditionalOnBean(SnowflakeGenerator.class)
-	@ConditionalOnMissingBean(SnowflakeConsumer.class)
-	public SnowflakeConsumer snowflakeConsumer() {
+	@ConditionalOnMissingBean(SnowflakeCustomizer.class)
+	public SnowflakeCustomizer snowflakeCustomizer() {
 		log.info("Intitle snowflake payload consumer.");
 		return (payload -> {});
 	}
@@ -66,9 +66,9 @@ public class SequenceAutoConfiguration {
 		public SnowflakeFactory snowflakeFactory(
 				@Autowired CuratorFramework client, 
 				@Autowired SnowflakeProperties properties, 
-				@Autowired SnowflakeConsumer consumer) {
+				@Autowired SnowflakeCustomizer customizer) {
 			log.info("Intitle snowflake curator factory.");
-			return new SnowflakeCuratorFactory(client, properties, consumer);
+			return new SnowflakeCuratorFactory(client, properties, customizer);
 		}
 
 		@Bean

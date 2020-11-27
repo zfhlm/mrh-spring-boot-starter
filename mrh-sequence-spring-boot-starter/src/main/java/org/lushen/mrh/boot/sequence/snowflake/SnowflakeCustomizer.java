@@ -5,8 +5,8 @@ package org.lushen.mrh.boot.sequence.snowflake;
  * 
  * @author hlm
  */
-public interface SnowflakeConsumer {
+public interface SnowflakeCustomizer {
 
-	public void consume(SnowflakePayload payload);
+	public void customize(SnowflakePayload payload);
 
 }

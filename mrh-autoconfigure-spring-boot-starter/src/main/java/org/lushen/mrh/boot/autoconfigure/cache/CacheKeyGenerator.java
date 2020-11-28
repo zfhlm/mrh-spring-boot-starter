@@ -20,8 +20,6 @@ import org.springframework.cache.interceptor.KeyGenerator;
  */
 public class CacheKeyGenerator implements KeyGenerator {
 
-	public static final String CACHE_KEY_GENERATOR = "org.lushen.mrh.autoconfigure.cache.key.generator";
-
 	@Override
 	public Object generate(Object target, Method method, Object... params) {
 		return toString(params);

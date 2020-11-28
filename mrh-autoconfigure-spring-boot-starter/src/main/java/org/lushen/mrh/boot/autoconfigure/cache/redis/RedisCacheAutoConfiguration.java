@@ -11,12 +11,10 @@ import org.apache.commons.logging.LogFactory;
 import org.lushen.mrh.boot.autoconfigure.cache.redis.RedisCacheProperties.RedisCacheDefaultProperties;
 import org.lushen.mrh.boot.autoconfigure.cache.redis.RedisCacheProperties.RedisCachePair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cache.interceptor.CacheAspectSupport;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -33,7 +31,6 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  */
 @Configuration
 @EnableConfigurationProperties
-@ConditionalOnBean({CacheAspectSupport.class, RedisConnectionFactory.class})
 @ConditionalOnProperty(prefix=NAMESPACE, name=ENABLED, havingValue=TRUE, matchIfMissing=false)
 public class RedisCacheAutoConfiguration {
 

@@ -4,8 +4,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.lushen.mrh.boot.autoconfigure.cache.redis.RedisCacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.cache.CacheManager;
-import org.springframework.context.annotation.Bean;
+import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.annotation.ProxyCachingConfiguration;
+import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -15,16 +16,14 @@ import org.springframework.context.annotation.Import;
  * @author hlm
  */
 @Configuration
-@Import({
-	RedisCacheAutoConfiguration.class
-})
-@ConditionalOnBean(CacheManager.class)
-public class CacheAutoConfiguration {
+@Import(RedisCacheAutoConfiguration.class)
+@ConditionalOnBean(ProxyCachingConfiguration.class)
+public class CacheAutoConfiguration extends CachingConfigurerSupport {
 
 	private final Log log = LogFactory.getLog(CacheAutoConfiguration.class);
 
-	@Bean(CacheKeyGenerator.CACHE_KEY_GENERATOR)
-	public CacheKeyGenerator cacheKeyGenerator() {
+	@Override
+	public KeyGenerator keyGenerator() {
 		log.info("Initialize bean " + CacheKeyGenerator.class);
 		return new CacheKeyGenerator();
 	}

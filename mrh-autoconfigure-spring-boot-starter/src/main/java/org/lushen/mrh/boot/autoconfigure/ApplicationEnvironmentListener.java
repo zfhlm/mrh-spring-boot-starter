@@ -1,6 +1,5 @@
 package org.lushen.mrh.boot.autoconfigure;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.boot.context.logging.LoggingApplicationListener;
 import org.springframework.context.ApplicationEvent;
@@ -9,7 +8,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 
 /**
- * 启动监听器，用于获取上下文对象，启动时通过 {@link SpringApplication#addListeners(ApplicationListener...)} 添加监听器
+ * 启动监听器，用于获取上下文对象
  * 
  * @author hlm
  */

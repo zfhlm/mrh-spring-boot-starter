@@ -19,8 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.MatchAlwaysTransactionAttributeSource;
 import org.springframework.transaction.interceptor.RollbackRuleAttribute;
@@ -34,7 +37,8 @@ import org.springframework.transaction.interceptor.TransactionInterceptor;
  * @author hlm
  */
 @Configuration
-@ConditionalOnBean(org.springframework.transaction.PlatformTransactionManager.class)
+@Order(Ordered.LOWEST_PRECEDENCE)
+@ConditionalOnBean(ProxyTransactionManagementConfiguration.class)
 public class JdbcTransactionAutoConfiguration {
 
 	private final Log log = LogFactory.getLog(JdbcTransactionAutoConfiguration.class);

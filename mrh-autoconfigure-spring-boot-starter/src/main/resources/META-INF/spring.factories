@@ -1,10 +1,10 @@
 
 # Listener
-org.lushen.mrh.boot.autoconfigure.ApplicationListener=\
+org.springframework.context.ApplicationListener=\
 org.lushen.mrh.boot.autoconfigure.ApplicationEnvironmentListener
 
 # Auto Configure
-org.lushen.mrh.boot.autoconfigure.AutoConfiguration=\
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 org.lushen.mrh.boot.autoconfigure.cache.CacheAutoConfiguration,\
 org.lushen.mrh.boot.autoconfigure.jackson.JacksonAutoConfiguration,\
 org.lushen.mrh.boot.autoconfigure.jdbc.JdbcTransactionAutoConfiguration,\

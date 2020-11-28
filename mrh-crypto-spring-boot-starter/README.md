@@ -79,9 +79,9 @@
 			org.lushen.mrh.token.jwt.secret=123456
 			org.lushen.mrh.token.jwt.default-timeout-second=3600
 		
-		②，使用 CryptoProvider 生成登录令牌
+		②，使用 CryptoProvider 生成登录令牌，开启或者配置 CryptoProvider bean实现，添加配置：
 		
-			开启或者配置 CryptoProvider bean实现
+			org.lushen.mrh.token.crypto.enabled=true
 	
 	使用示例：
 	

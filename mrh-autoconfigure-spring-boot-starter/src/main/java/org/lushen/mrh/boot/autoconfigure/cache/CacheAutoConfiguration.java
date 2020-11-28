@@ -1,5 +1,7 @@
 package org.lushen.mrh.boot.autoconfigure.cache;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.lushen.mrh.boot.autoconfigure.cache.redis.RedisCacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.cache.CacheManager;
@@ -19,8 +21,11 @@ import org.springframework.context.annotation.Import;
 @ConditionalOnBean(CacheManager.class)
 public class CacheAutoConfiguration {
 
+	private final Log log = LogFactory.getLog(CacheAutoConfiguration.class);
+
 	@Bean(CacheKeyGenerator.CACHE_KEY_GENERATOR)
 	public CacheKeyGenerator cacheKeyGenerator() {
+		log.info("Initialize bean " + CacheKeyGenerator.class);
 		return new CacheKeyGenerator();
 	}
 

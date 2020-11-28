@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -30,12 +32,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ConditionalOnWebApplication(type=Type.SERVLET)
 public class ValidationAutoConfiguration {
 
+	private final Log log = LogFactory.getLog(ValidationAutoConfiguration.class);
+
 	private static final String VALIDATION = "validation";
 
 	private static final String VALIDATION_RESOURCES = "classpath*:*.properties";
 
 	@Bean
 	public WebMvcConfigurer validatorWebMvcConfigurer(@Autowired MessageSource messageSource) {
+		log.info("Initialize validator WebMvcConfigurer, load validation message resouces.");
 		return new ValidationWebMvcConfigurer(messageSource);
 	}
 

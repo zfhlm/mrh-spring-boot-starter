@@ -3,9 +3,8 @@ package org.lushen.mrh.boot.autoconfigure.jackson;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,23 +23,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @ConditionalOnClass(ObjectMapper.class)
 public class JacksonAutoConfiguration {
 
+	private final Log log = LogFactory.getLog(JacksonAutoConfiguration.class);
+
 	@Bean
-	public BeanPostProcessor objectMapperPostProcessor(@Autowired ObjectMapper objectMapper) {
-		return new BeanPostProcessor() {
-			@Override
-			public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-				if(bean instanceof ObjectMapper) {
-					ObjectMapper objectMapper = (ObjectMapper) bean;
-					objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-					objectMapper.setSerializationInclusion(Include.NON_NULL);
-					objectMapper.setVisibility(PropertyAccessor.GETTER, Visibility.NONE);
-					objectMapper.setVisibility(PropertyAccessor.SETTER, Visibility.NONE);
-					objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-					objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-				}
-				return bean;
-			}
-		};
+	public ObjectMapper objectMapper() {
+		log.info("Initialize bean " + ObjectMapper.class);
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+		objectMapper.setSerializationInclusion(Include.NON_NULL);
+		objectMapper.setVisibility(PropertyAccessor.GETTER, Visibility.NONE);
+		objectMapper.setVisibility(PropertyAccessor.SETTER, Visibility.NONE);
+		objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+		objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+		return objectMapper;
 	}
 
 }

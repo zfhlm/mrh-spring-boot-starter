@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.Pointcut;
@@ -35,8 +37,11 @@ import org.springframework.transaction.interceptor.TransactionInterceptor;
 @ConditionalOnBean(org.springframework.transaction.PlatformTransactionManager.class)
 public class JdbcTransactionAutoConfiguration {
 
+	private final Log log = LogFactory.getLog(JdbcTransactionAutoConfiguration.class);
+
 	@Bean
 	public TransactionInterceptor txAdvice(DataSourceTransactionManager txManager){
+		log.info("Initialize @Transactional interceptor bean " + TransactionInterceptor.class);
 		List<RollbackRuleAttribute> rollbackRules = Collections.singletonList(new RollbackRuleAttribute(Throwable.class)); 
 		TransactionAttribute transactionAttribute = new RuleBasedTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRED, rollbackRules);
 		MatchAlwaysTransactionAttributeSource transactionAttributeSource = new MatchAlwaysTransactionAttributeSource();
@@ -46,6 +51,7 @@ public class JdbcTransactionAutoConfiguration {
 
 	@Bean
 	public PointcutAdvisor txPointcutAdvisor(@Autowired TransactionInterceptor txAdvice){
+		log.info("Initialize @Transactional advice bean " + PointcutAdvisor.class);
 		DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor();
 		advisor.setAdvice(txAdvice);
 		advisor.setPointcut(new Pointcut() {

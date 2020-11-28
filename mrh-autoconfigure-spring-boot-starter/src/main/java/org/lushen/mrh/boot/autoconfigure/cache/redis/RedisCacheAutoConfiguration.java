@@ -6,6 +6,8 @@ import static org.lushen.mrh.boot.autoconfigure.cache.redis.RedisCacheAutoConfig
 import static org.lushen.mrh.boot.autoconfigure.cache.redis.RedisCacheAutoConfiguration.TRUE;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.lushen.mrh.boot.autoconfigure.cache.redis.RedisCacheProperties.RedisCacheDefaultProperties;
 import org.lushen.mrh.boot.autoconfigure.cache.redis.RedisCacheProperties.RedisCachePair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,8 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 @ConditionalOnProperty(prefix=NAMESPACE, name=ENABLED, havingValue=TRUE, matchIfMissing=false)
 public class RedisCacheAutoConfiguration {
 
+	private final Log log = LogFactory.getLog(RedisCacheAutoConfiguration.class);
+
 	static final String NAMESPACE = "org.lushen.mrh.cache.redis";
 
 	static final String ENABLED = "enabled";
@@ -50,6 +54,7 @@ public class RedisCacheAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(RedisCacheManager.class)
 	public RedisCacheManager redisCacheManager(@Autowired RedisConnectionFactory connectionFactory, @Autowired RedisCacheProperties properties) {
+		log.info("Initialize bean " + RedisCacheManager.class);
 		RedisCacheManagerBuilder builder = RedisCacheManager.builder(connectionFactory);
 		builder.cacheDefaults(apply(properties.getDefaultCache(), properties.getValuePair()));
 		builder.withInitialCacheConfigurations(properties.getInitialCaches().stream().collect(toMap(e -> e.getName(), e -> apply(e, properties.getValuePair()))));

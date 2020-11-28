@@ -59,7 +59,7 @@ public class TokenAutoConfiguration {
 	@Configuration
 	@ConditionalOnBean(CryptoProvider.class)
 	@ConditionalOnMissingBean({TokenResolver.class, NoneCryptoProvider.class})
-	@ConditionalOnProperty(prefix=CRYPTO, name=ENABLED, havingValue=TRUE, matchIfMissing=true)
+	@ConditionalOnProperty(prefix=CRYPTO, name=ENABLED, havingValue=TRUE, matchIfMissing=false)
 	public class cryptoTokenConfiguration {
 
 		@Bean

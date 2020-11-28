@@ -7,7 +7,7 @@ import java.io.Serializable;
  * 
  * @author hlm
  */
-public final class SnowflakePayload implements Serializable {
+public class SnowflakePayload extends SnowflakeNode implements Serializable {
 
 	private static final long serialVersionUID = -3216891116277674535L;
 
@@ -22,10 +22,6 @@ public final class SnowflakePayload implements Serializable {
 	private String basePath;		// 当前根路径
 
 	private String nodePath;		// 当前子路径
-
-	private int centerId;			// 数据中心ID
-
-	private int workerId;			// 记录中心ID
 
 	private boolean isRegister;		// 是否已注册
 	
@@ -85,22 +81,6 @@ public final class SnowflakePayload implements Serializable {
 		this.nodePath = nodePath;
 	}
 
-	public int getCenterId() {
-		return centerId;
-	}
-
-	public void setCenterId(int centerId) {
-		this.centerId = centerId;
-	}
-
-	public int getWorkerId() {
-		return workerId;
-	}
-
-	public void setWorkerId(int workerId) {
-		this.workerId = workerId;
-	}
-
 	public boolean isRegister() {
 		return isRegister;
 	}
@@ -157,9 +137,9 @@ public final class SnowflakePayload implements Serializable {
 		builder.append(", nodePath=");
 		builder.append(nodePath);
 		builder.append(", centerId=");
-		builder.append(centerId);
+		builder.append(getCenterId());
 		builder.append(", workerId=");
-		builder.append(workerId);
+		builder.append(getWorkerId());
 		builder.append(", isRegister=");
 		builder.append(isRegister);
 		builder.append(", beginAt=");

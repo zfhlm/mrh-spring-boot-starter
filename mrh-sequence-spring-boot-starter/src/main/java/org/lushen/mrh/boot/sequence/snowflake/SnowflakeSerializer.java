@@ -1,4 +1,4 @@
-package org.lushen.mrh.boot.sequence.snowflake.support;
+package org.lushen.mrh.boot.sequence.snowflake;
 
 /**
  * snowflake 序列化接口
@@ -7,7 +7,7 @@ package org.lushen.mrh.boot.sequence.snowflake.support;
  * @param <F>
  * @param <T>
  */
-interface SnowflakeSerializer<F, T> {
+public interface SnowflakeSerializer<F, T> {
 
 	/**
 	 * 序列化

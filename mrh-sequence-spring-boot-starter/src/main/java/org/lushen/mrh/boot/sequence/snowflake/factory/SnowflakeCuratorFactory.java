@@ -22,14 +22,15 @@ import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.zookeeper.CreateMode;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeCustomizer;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeFactory;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeNode;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakePayload;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeProperties;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeSerializer;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeWorker;
-import org.lushen.mrh.boot.sequence.snowflake.support.NodeDataSerializer;
-import org.lushen.mrh.boot.sequence.snowflake.support.NodePathSerializer;
-import org.lushen.mrh.boot.sequence.snowflake.support.NodePathSerializer.Node;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * 使用zookeeper作为注册中心
@@ -40,9 +41,9 @@ public class SnowflakeCuratorFactory implements SnowflakeFactory, InitializingBe
 
 	private final Log log = LogFactory.getLog(getClass());
 
-	private final NodePathSerializer nodePathSerializer = new NodePathSerializer();
+	private final PathSerializer pathSerializer = new PathSerializer();
 
-	private final NodeDataSerializer nodeDataSerializer = new NodeDataSerializer();
+	private final NodeSerializer nodeSerializer = new NodeSerializer();
 
 	private final LinkedHashMap<String, SnowflakePayload> payloads = new LinkedHashMap<String, SnowflakePayload>();
 
@@ -90,7 +91,7 @@ public class SnowflakeCuratorFactory implements SnowflakeFactory, InitializingBe
 			for(String nodePath : this.client.getChildren().forPath(this.basePath)) {
 				if(this.payloads.containsKey(nodePath)) {
 					byte[] buffer = this.client.getData().forPath(fullPath(nodePath));
-					SnowflakePayload payload = this.nodeDataSerializer.deserialize(buffer);
+					SnowflakePayload payload = this.nodeSerializer.deserialize(buffer);
 					this.payloads.put(payload.getNodePath(), payload);
 				}
 			}
@@ -108,7 +109,7 @@ public class SnowflakeCuratorFactory implements SnowflakeFactory, InitializingBe
 		if(childData != null && this.payloads.containsKey(childData.getPath())) {
 			synchronized (this) {
 				if(eventType == NODE_ADDED || eventType == NODE_UPDATED) {
-					SnowflakePayload payload = this.nodeDataSerializer.deserialize(childData.getData());
+					SnowflakePayload payload = this.nodeSerializer.deserialize(childData.getData());
 					this.payloads.put(payload.getNodePath(), payload);
 				}
 				else if(eventType == NODE_REMOVED) {
@@ -153,13 +154,13 @@ public class SnowflakeCuratorFactory implements SnowflakeFactory, InitializingBe
 				InterProcessMutex lock = new InterProcessMutex(this.client, lockPath);
 				try {
 					if(lock.acquire(0, TimeUnit.MICROSECONDS)) {
-						if(this.client.checkExists().forPath(fullPath) != null && this.nodeDataSerializer.deserialize(this.client.getData().forPath(fullPath)).getUpdateAt() == payload.getUpdateAt()) {
+						if(this.client.checkExists().forPath(fullPath) != null && this.nodeSerializer.deserialize(this.client.getData().forPath(fullPath)).getUpdateAt() == payload.getUpdateAt()) {
 							payload.setRegister(true);
 							payload.setBeginAt(currentTime);
 							payload.setExpiredAt(currentTime + this.liveTimeMillis);
 							payload.setUpdateAt(currentTime);
 							this.customizer.customize(payload);
-							this.client.setData().forPath(fullPath, this.nodeDataSerializer.serialize(payload));
+							this.client.setData().forPath(fullPath, this.nodeSerializer.serialize(payload));
 							log.info("Subject payload : " + payload);
 							return new SnowflakeWorker(payload);
 						} else {
@@ -169,7 +170,7 @@ public class SnowflakeCuratorFactory implements SnowflakeFactory, InitializingBe
 							payload.setCreateAt(currentTime);
 							payload.setUpdateAt(currentTime);
 							this.customizer.customize(payload);
-							this.client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(fullPath, this.nodeDataSerializer.serialize(payload));
+							this.client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(fullPath, this.nodeSerializer.serialize(payload));
 							log.info("Register payload : " + payload);
 							return new SnowflakeWorker(payload);
 						}
@@ -203,7 +204,7 @@ public class SnowflakeCuratorFactory implements SnowflakeFactory, InitializingBe
 		payload.setCenterId(centerId);
 		payload.setWorkerId(workerId);
 		payload.setBasePath(this.basePath);
-		payload.setNodePath(this.nodePathSerializer.serialize(new Node(centerId, workerId)));
+		payload.setNodePath(this.pathSerializer.serialize(new SnowflakeNode(centerId, workerId)));
 		payload.setRegister(false);
 
 		return payload;
@@ -216,6 +217,66 @@ public class SnowflakeCuratorFactory implements SnowflakeFactory, InitializingBe
 
 	private String lockPath(String nodePath) {
 		return new StringBuilder(this.basePath).append("/").append("lock").append("/").append(nodePath).toString();
+	}
+
+	private class PathSerializer implements SnowflakeSerializer<SnowflakeNode, String> {
+
+		@Override
+		public String serialize(SnowflakeNode payload) {
+			try {
+				StringBuilder builder = new StringBuilder();
+				if(payload.getCenterId() < 10) {
+					builder.append('0');
+				}
+				builder.append(payload.getCenterId());
+				builder.append('-');
+				if(payload.getWorkerId() < 10) {
+					builder.append('0');
+				}
+				builder.append(payload.getWorkerId());
+				return builder.toString();
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage(), e);
+			}
+		}
+
+		@Override
+		public SnowflakeNode deserialize(String buffer) {
+			try {
+				int index = buffer.indexOf('-');
+				SnowflakeNode node = new SnowflakeNode();
+				node.setCenterId(Integer.parseInt(buffer.substring(0, index)));
+				node.setWorkerId(Integer.parseInt(buffer.substring(index+1)));
+				return node;
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage(), e);
+			}
+		}
+
+	}
+
+	private class NodeSerializer implements SnowflakeSerializer<SnowflakePayload, byte[]> {
+
+		private final ObjectMapper objectMapper = new ObjectMapper();
+
+		@Override
+		public byte[] serialize(SnowflakePayload payload) {
+			try {
+				return this.objectMapper.writeValueAsBytes(payload);
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage(), e);
+			}
+		}
+
+		@Override
+		public SnowflakePayload deserialize(byte[] buffer) {
+			try {
+				return this.objectMapper.readValue(buffer, SnowflakePayload.class);
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage(), e);
+			}
+		}
+
 	}
 
 }

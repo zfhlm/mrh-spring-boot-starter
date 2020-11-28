@@ -11,7 +11,6 @@ import org.lushen.mrh.boot.springfox.plugin.JacksonPlugin;
 import org.lushen.mrh.boot.springfox.plugin.ValidationPlugin;
 import org.lushen.mrh.support.generic.enums.GenericEnum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -20,16 +19,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.classmate.TypeResolver;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.annotations.ApiOperation;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.oas.annotations.EnableOpenApi;
-import springfox.documentation.oas.configuration.OpenApiDocumentationConfiguration;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
@@ -43,7 +41,6 @@ import springfox.documentation.spring.web.plugins.Docket;
  */
 @Configuration
 @ConditionalOnClass(EnableOpenApi.class)
-@ConditionalOnBean(OpenApiDocumentationConfiguration.class)
 @EnableConfigurationProperties(SpringfoxProperties.class)
 public class SpringfoxAutoConfiguration {
 

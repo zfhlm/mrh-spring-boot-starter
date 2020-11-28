@@ -1,7 +1,7 @@
 package org.lushen.mrh.boot.sequence.snowflake;
 
 /**
- * snowflake 信息到注册中心之前调用此接口
+ * snowflake payload 注册或更新，前置回调接口
  * 
  * @author hlm
  */

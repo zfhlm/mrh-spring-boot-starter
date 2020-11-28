@@ -30,13 +30,6 @@ public class SequenceAutoConfiguration {
 	private static final Log log = LogFactory.getLog(SequenceAutoConfiguration.class);
 
 	@Bean
-	@ConditionalOnMissingBean(KeyGenerator.class)
-	public KeyGenerator uuidKeyGenerator() {
-		log.info("Initialize uuid key generator.");
-		return new UuidKeyGenerator();
-	}
-
-	@Bean
 	@ConditionalOnBean(SequenceGenerator.class)
 	public KeyGenerator sequenceKeyGenerator(@Autowired SequenceGenerator generator) {
 		log.info("Initialize key generator with sequence generator.");
@@ -44,11 +37,10 @@ public class SequenceAutoConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnBean(SnowflakeGenerator.class)
-	@ConditionalOnMissingBean(SnowflakeCustomizer.class)
-	public SnowflakeCustomizer snowflakeCustomizer() {
-		log.info("Intitle snowflake payload consumer.");
-		return (payload -> {});
+	@ConditionalOnMissingBean(KeyGenerator.class)
+	public KeyGenerator uuidKeyGenerator() {
+		log.info("Initialize uuid key generator.");
+		return new UuidKeyGenerator();
 	}
 
 	@Configuration
@@ -60,6 +52,13 @@ public class SequenceAutoConfiguration {
 		@ConfigurationProperties(prefix="org.lushen.mrh.sequence")
 		public SnowflakeProperties snowflakeProperties() {
 			return new SnowflakeProperties();
+		}
+
+		@Bean
+		@ConditionalOnMissingBean(SnowflakeCustomizer.class)
+		public SnowflakeCustomizer snowflakeCustomizer() {
+			log.info("Intitle snowflake payload consumer.");
+			return (payload -> {});
 		}
 
 		@Bean

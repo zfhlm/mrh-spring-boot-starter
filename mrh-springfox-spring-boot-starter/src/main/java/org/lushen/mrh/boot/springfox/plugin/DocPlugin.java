@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.lushen.mrh.boot.springfox.annotation.Doc;
 import org.lushen.mrh.boot.springfox.annotation.DocHidden;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import com.fasterxml.classmate.TypeResolver;
@@ -30,12 +31,17 @@ import springfox.documentation.spi.service.contexts.ParameterExpansionContext;
  * 
  * @author hlm
  */
-public class DocPlugin implements ApiListingBuilderPlugin, OperationBuilderPlugin, ModelBuilderPlugin, ExpandedParameterBuilderPlugin, ModelPropertyBuilderPlugin {
+public class DocPlugin implements ApiListingBuilderPlugin, OperationBuilderPlugin, ModelBuilderPlugin, ExpandedParameterBuilderPlugin, ModelPropertyBuilderPlugin, Ordered {
 
 	private final TypeResolver typeResolver;
 
 	public DocPlugin(TypeResolver typeResolver) {
 		this.typeResolver = typeResolver;
+	}
+
+	@Override
+	public int getOrder() {
+		return LOWEST_PRECEDENCE;
 	}
 
 	@Override
@@ -86,13 +92,13 @@ public class DocPlugin implements ApiListingBuilderPlugin, OperationBuilderPlugi
 
 	@Override
 	public void apply(ModelPropertyContext context) {
-		context.getAnnotatedElement().map(e -> e.getAnnotation(Doc.class)).ifPresent(doc -> {
+		context.getBeanPropertyDefinition().map(e -> e.getField()).map(e -> e.getAnnotation(Doc.class)).ifPresent(doc -> {
 			context.getSpecificationBuilder().description(doc.value());
 		});
-		context.getAnnotatedElement().map(e -> e.getAnnotation(DocHidden.class)).ifPresent(hidden -> {
+		context.getBeanPropertyDefinition().map(e -> e.getField()).map(e -> e.getAnnotation(DocHidden.class)).ifPresent(hidden -> {
 			context.getSpecificationBuilder().isHidden(hidden.value());
 		});
-		context.getAnnotatedElement().map(e -> (Field)e).ifPresent(field -> {
+		context.getBeanPropertyDefinition().map(e -> e.getField()).ifPresent(field -> {
 			Field[] fields = FieldUtils.getAllFields(field.getDeclaringClass());
 			for(int index=0; index<fields.length; index++) {
 				if(StringUtils.equals(fields[index].getName(), field.getName())) {

@@ -26,6 +26,11 @@ public class JacksonPlugin implements ExpandedParameterBuilderPlugin, ModelPrope
 
 	private ObjectMapper objectMapper;
 
+	public JacksonPlugin(ObjectMapper objectMapper) {
+		super();
+		this.objectMapper = objectMapper;
+	}
+
 	@Override
 	public boolean supports(DocumentationType delimiter) {
 		return true;

@@ -55,7 +55,7 @@ public class ErrorHandlerAutoConfiguration {
 
 		@ExceptionHandler(Throwable.class)
 		public void errorHandler(Throwable cause, HttpServletResponse response) throws Exception {
-			GenericResult result = registry.getPluginFor(cause).handle(cause);
+			GenericResult result = registry.getPluginFor(cause).orElseThrow(RuntimeException::new).handle(cause);
 			OutputStream out = null;
 			try {
 				response.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);

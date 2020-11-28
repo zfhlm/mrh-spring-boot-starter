@@ -20,14 +20,12 @@ import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.annotations.ApiOperation;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
@@ -40,8 +38,8 @@ import springfox.documentation.spring.web.plugins.Docket;
  * @author helm
  */
 @Configuration
-@ConditionalOnClass(EnableOpenApi.class)
-@EnableConfigurationProperties(SpringfoxProperties.class)
+@ConditionalOnClass(ApiInfo.class)
+@EnableConfigurationProperties
 public class SpringfoxAutoConfiguration {
 
 	private static final String PROP_PREFIX = "org.lushen.mrh.springfox";
@@ -85,17 +83,16 @@ public class SpringfoxAutoConfiguration {
 	}
 
 	@Bean
-	public JacksonPlugin jacksonPlugin() {
-		return new JacksonPlugin();
+	public JacksonPlugin jacksonPlugin(@Autowired ObjectMapper objectMapper) {
+		return new JacksonPlugin(objectMapper);
 	}
 
 	@Bean
-	public JacksonModuleRegistrar jacksonModuleRegistrar() {
+	public JacksonModuleRegistrar zjacksonModuleRegistrar() {
 		return new JacksonModuleRegistrar() {
 			@Override
 			public void maybeRegisterModule(ObjectMapper objectMapper) {
 				objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-				objectMapper.setSerializationInclusion(Include.NON_NULL);
 				objectMapper.setVisibility(PropertyAccessor.GETTER, Visibility.NONE);
 				objectMapper.setVisibility(PropertyAccessor.SETTER, Visibility.NONE);
 				objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);

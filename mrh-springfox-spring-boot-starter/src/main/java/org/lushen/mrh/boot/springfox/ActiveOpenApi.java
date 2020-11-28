@@ -65,7 +65,7 @@ public @interface ActiveOpenApi {
 
 				// see @EnableOpenApi
 				BeanDefinitionBuilder springfoxBuilder = BeanDefinitionBuilder.genericBeanDefinition(OpenApiDocumentationConfiguration.class);
-				registry.registerBeanDefinition(OpenApiDocumentationConfiguration.class.getName(), springfoxBuilder.getBeanDefinition());
+				registry.registerBeanDefinition(OpenApiDocumentationConfiguration.class.getSimpleName(), springfoxBuilder.getBeanDefinition());
 
 				// 注入swagger2扩展配置
 				BeanDefinitionBuilder expandBuilder = BeanDefinitionBuilder.genericBeanDefinition(SpringfoxAutoConfiguration.class);

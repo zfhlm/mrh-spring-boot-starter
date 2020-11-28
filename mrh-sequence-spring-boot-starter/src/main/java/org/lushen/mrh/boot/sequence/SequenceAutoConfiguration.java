@@ -16,9 +16,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 
 /**
  * generator 自动配置
@@ -45,51 +43,18 @@ public class SequenceAutoConfiguration {
 		return new SequenceKeyGenerator(generator);
 	}
 
-	@Configuration
-	@Conditional
-	public static class SnowflakeAutoConfiguration {
-		
+	@Bean
+	@ConditionalOnBean(SnowflakeGenerator.class)
+	@ConditionalOnMissingBean(SnowflakeCustomizer.class)
+	public SnowflakeCustomizer snowflakeCustomizer() {
+		log.info("Intitle snowflake payload consumer.");
+		return (payload -> {});
 	}
-	
+
 	@Configuration
 	@ConditionalOnBean(CuratorFramework.class)
 	@ConditionalOnMissingBean(SequenceGenerator.class)
 	public static class CuratorAutoConfiguration {
-
-		@Bean
-		@ConfigurationProperties(prefix="org.lushen.mrh.sequence")
-		public SnowflakeProperties snowflakeProperties() {
-			return new SnowflakeProperties();
-		}
-
-		@Bean
-		@ConditionalOnMissingBean(SnowflakeCustomizer.class)
-		public SnowflakeCustomizer snowflakeCustomizer() {
-			log.info("Intitle snowflake payload consumer.");
-			return (payload -> {});
-		}
-
-		@Bean
-		public SnowflakeFactory snowflakeFactory(
-				@Autowired CuratorFramework client, 
-				@Autowired SnowflakeProperties properties, 
-				@Autowired SnowflakeCustomizer customizer) {
-			log.info("Intitle snowflake curator factory.");
-			return new SnowflakeCuratorFactory(client, properties, customizer);
-		}
-
-		@Bean
-		public SnowflakeGenerator snowflakeGenerator(@Autowired SnowflakeFactory factory) {
-			log.info("Intitle snowflake curator generator.");
-			return new SnowflakeGenerator(factory);
-		}
-
-	}
-
-	@Configuration
-	@ConditionalOnBean(RedisConnectionFactory.class)
-	@ConditionalOnMissingBean(SequenceGenerator.class)
-	public static class RedisAutoConfiguration {
 
 		@Bean
 		@ConfigurationProperties(prefix="org.lushen.mrh.sequence")

@@ -27,6 +27,11 @@ public class MethodArgumentNotValidExceptionPlugin implements ErrorHandlerPlugin
 	private final Log log = LogFactory.getLog(getClass().getSimpleName());
 
 	@Override
+	public int getOrder() {
+		return HIGHEST_PRECEDENCE + 999;
+	}
+
+	@Override
 	public boolean supports(Throwable cause) {
 		return cause instanceof MethodArgumentNotValidException;
 	}

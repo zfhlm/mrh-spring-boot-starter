@@ -3,38 +3,28 @@ package org.lushen.mrh.boot.autoconfigure.web.plugin;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.lushen.mrh.boot.autoconfigure.web.ErrorHandlerPlugin;
-import org.lushen.mrh.support.generic.exp.GenericBizException;
-import org.lushen.mrh.support.generic.exp.GenericException;
 import org.lushen.mrh.support.generic.status.GenericStatus;
 import org.lushen.mrh.support.generic.view.GenericResult;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 
 /**
- * {@link GenericException}
+ * {@link HttpMessageNotReadableException}
  * 
  * @author hlm
  */
-public class GenericExceptionPlugin implements ErrorHandlerPlugin {
+public class HttpMessageNotReadableExceptionPlugin implements ErrorHandlerPlugin {
 
 	private final Log log = LogFactory.getLog(getClass().getSimpleName());
 
 	@Override
-	public int getOrder() {
-		return HIGHEST_PRECEDENCE + 1000;
-	}
-
-	@Override
 	public boolean supports(Throwable cause) {
-		return cause instanceof GenericException;
+		return cause instanceof HttpMessageNotReadableException;
 	}
 
 	@Override
 	public GenericResult handle(Throwable cause) {
-		if(cause instanceof GenericBizException) {
-			log.error(cause.getMessage());
-		} else {
-			log.error(cause.getMessage(), cause);
-		}
-		GenericStatus status = ((GenericException)cause).getStatus();
+		log.error(cause.getMessage());
+		GenericStatus status = GenericStatus.NOT_ACCEPTABLE;
 		return new GenericResult(status.getErrcode(), status.getErrmsg());
 	}
 

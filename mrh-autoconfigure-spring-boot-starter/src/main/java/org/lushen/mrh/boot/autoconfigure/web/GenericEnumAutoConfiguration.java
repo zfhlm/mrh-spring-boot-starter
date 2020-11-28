@@ -1,4 +1,4 @@
-package org.lushen.mrh.boot.autoconfigure.generic;
+package org.lushen.mrh.boot.autoconfigure.web;
 
 import org.lushen.mrh.support.generic.enums.GenericEnum;
 import org.lushen.mrh.support.generic.enums.GenericEnumMvcConverterFactory;

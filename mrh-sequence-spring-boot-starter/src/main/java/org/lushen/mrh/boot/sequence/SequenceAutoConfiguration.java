@@ -13,8 +13,10 @@ import org.lushen.mrh.boot.sequence.snowflake.factory.SnowflakeCuratorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -44,6 +46,31 @@ public class SequenceAutoConfiguration {
 	}
 
 	@Configuration
+	@ConditionalOnBean(SnowflakeGenerator.class)
+	public static class SnowflakeAutoConfiguration {
+
+		@Bean
+		@ConditionalOnMissingBean(SnowflakeCustomizer.class)
+		public SnowflakeCustomizer snowflakeCustomizer(@Autowired ApplicationContext applicationContext) {
+			ServerProperties properties = applicationContext.getBeansOfType(ServerProperties.class).values().stream().findFirst().orElse(null);
+			if(properties == null) {
+				return (payload -> {
+					payload.setId(applicationContext.getId());
+					payload.setName(applicationContext.getApplicationName());
+				});
+			} else {
+				return (payload -> {
+					payload.setId(applicationContext.getId());
+					payload.setName(applicationContext.getApplicationName());
+					payload.setAddress(String.valueOf(properties.getAddress()));
+					payload.setPort(properties.getPort());
+				});
+			}
+		}
+
+	}
+
+	@Configuration
 	@ConditionalOnBean(CuratorFramework.class)
 	@ConditionalOnMissingBean(SequenceGenerator.class)
 	public static class CuratorAutoConfiguration {
@@ -52,13 +79,6 @@ public class SequenceAutoConfiguration {
 		@ConfigurationProperties(prefix="org.lushen.mrh.sequence")
 		public SnowflakeProperties snowflakeProperties() {
 			return new SnowflakeProperties();
-		}
-
-		@Bean
-		@ConditionalOnMissingBean(SnowflakeCustomizer.class)
-		public SnowflakeCustomizer snowflakeCustomizer() {
-			log.info("Intitle snowflake payload consumer.");
-			return (payload -> {});
 		}
 
 		@Bean

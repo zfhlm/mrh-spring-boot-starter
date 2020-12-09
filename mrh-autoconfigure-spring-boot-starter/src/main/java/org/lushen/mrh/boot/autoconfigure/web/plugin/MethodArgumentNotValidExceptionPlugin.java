@@ -38,12 +38,9 @@ public class MethodArgumentNotValidExceptionPlugin implements ErrorHandlerPlugin
 
 	@Override
 	public GenericResult handle(Throwable cause) {
-
 		log.error(cause.getMessage());
-
 		List<Message> messages = ((MethodArgumentNotValidException)cause).getBindingResult().getFieldErrors().stream()
 				.map(this::toMessage).sorted(Comparator.comparing(Message::getName)).collect(Collectors.toList());
-
 		String errmsg = messages.stream().findFirst().map(Message::getMessage).orElse(VALID_PARAM_ERROR.getErrmsg());
 		return new ValidationResult(VALID_PARAM_ERROR.getErrcode(), errmsg, messages);
 	}

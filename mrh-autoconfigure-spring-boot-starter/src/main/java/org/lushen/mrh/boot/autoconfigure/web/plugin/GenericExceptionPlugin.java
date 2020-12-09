@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.lushen.mrh.boot.autoconfigure.web.ErrorHandlerPlugin;
 import org.lushen.mrh.support.generic.exp.GenericBizException;
 import org.lushen.mrh.support.generic.exp.GenericException;
+import org.lushen.mrh.support.generic.exp.GenericPayloadException;
 import org.lushen.mrh.support.generic.status.GenericStatus;
 import org.lushen.mrh.support.generic.view.GenericResult;
 
@@ -30,9 +31,32 @@ public class GenericExceptionPlugin implements ErrorHandlerPlugin {
 	@Override
 	public GenericResult handle(Throwable cause) {
 		if(cause instanceof GenericBizException) {
-			log.error(cause.getMessage());
-		} else {
-			log.error(cause.getMessage(), cause);
+			StringBuilder message = new StringBuilder();
+			message.append("Generic biz message: ");
+			message.append(cause.getMessage());
+			message.append(", status: ");
+			message.append(((GenericBizException)cause).getStatus());
+			message.append(", payload: ");
+			message.append(((GenericBizException)cause).getPayload());
+			log.error(message.toString());
+		}
+		else if(cause instanceof GenericPayloadException) {
+			StringBuilder message = new StringBuilder();
+			message.append("Generic payload message: ");
+			message.append(cause.getMessage());
+			message.append(", status: ");
+			message.append(((GenericBizException)cause).getStatus());
+			message.append(", payload: ");
+			message.append(((GenericBizException)cause).getPayload());
+			log.error(message.toString(), cause);
+		}
+		else {
+			StringBuilder message = new StringBuilder();
+			message.append("Generic message: ");
+			message.append(cause.getMessage());
+			message.append(", status: ");
+			message.append(((GenericException)cause).getStatus());
+			log.error(message.toString(), cause);
 		}
 		GenericStatus status = ((GenericException)cause).getStatus();
 		return new GenericResult(status.getErrcode(), status.getErrmsg());

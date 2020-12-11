@@ -1,9 +1,11 @@
 package org.lushen.mrh.boot.autoconfigure.webmvc;
 
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.ExceptionHandlerAdvice;
+import org.lushen.mrh.boot.autoconfigure.webmvc.advice.ExceptionPlugin;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin.BindExceptionPlugin;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin.GenericExceptionPlugin;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin.HttpMessageNotReadableExceptionPlugin;
+import org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin.HttpRequestMethodNotSupportedExceptionPlugin;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin.MethodArgumentNotValidExceptionPlugin;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin.MissingRequestHeaderExceptionPlugin;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin.NoHandlerFoundExceptionPlugin;
@@ -15,7 +17,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.plugin.core.config.EnablePluginRegistries;
 import org.springframework.validation.BindException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -28,6 +32,10 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @Configuration(proxyBeanMethods=false)
 @ConditionalOnWebApplication(type=Type.SERVLET)
 public class AdviceAutoConfiguration {
+
+	@EnablePluginRegistries(ExceptionPlugin.class)
+	@Configuration(proxyBeanMethods=false)
+	public static class PluginAutoConfiguration {}
 
 	@Bean
 	@ConditionalOnMissingBean(ExceptionHandlerAdvice.class)
@@ -96,6 +104,17 @@ public class AdviceAutoConfiguration {
 		@Bean
 		public HttpMessageNotReadableExceptionPlugin httpMessageNotReadableExceptionPlugin() {
 			return new HttpMessageNotReadableExceptionPlugin();
+		}
+
+	}
+
+	@Configuration(proxyBeanMethods=false)
+	@ConditionalOnClass(HttpRequestMethodNotSupportedException.class)
+	public static class HttpRequestMethodNotSupportedExceptionPluginConfiguration {
+
+		@Bean
+		public HttpRequestMethodNotSupportedExceptionPlugin httpRequestMethodNotSupportedExceptionPlugin() {
+			return new HttpRequestMethodNotSupportedExceptionPlugin();
 		}
 
 	}

@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.plugin.core.PluginRegistry;
-import org.springframework.plugin.core.config.EnablePluginRegistries;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -27,7 +26,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author hlm
  */
 @ControllerAdvice
-@EnablePluginRegistries(ExceptionPlugin.class)
 public class ExceptionHandlerAdvice implements InitializingBean {
 
 	private final Log log = LogFactory.getLog(ExceptionHandlerAdvice.class);

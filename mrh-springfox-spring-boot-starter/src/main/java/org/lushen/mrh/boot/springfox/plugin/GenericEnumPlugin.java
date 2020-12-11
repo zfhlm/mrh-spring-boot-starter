@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.lushen.mrh.support.generic.enums.GenericEnum;
+import org.lushen.mrh.boot.autoconfigure.support.enums.GenericEnum;
 
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.schema.ModelPropertyBuilderPlugin;

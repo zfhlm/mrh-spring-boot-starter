@@ -4,12 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Optional;
 import java.util.TimeZone;
 
+import org.lushen.mrh.boot.autoconfigure.support.enums.GenericEnum;
 import org.lushen.mrh.boot.springfox.annotation.Doc;
 import org.lushen.mrh.boot.springfox.plugin.DocPlugin;
 import org.lushen.mrh.boot.springfox.plugin.GenericEnumPlugin;
 import org.lushen.mrh.boot.springfox.plugin.JacksonPlugin;
 import org.lushen.mrh.boot.springfox.plugin.ValidationPlugin;
-import org.lushen.mrh.support.generic.enums.GenericEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

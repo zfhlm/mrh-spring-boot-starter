@@ -48,6 +48,36 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>org.lushen.mrh</groupId>
+				<artifactId>mrh-autoconfigure-spring-boot-starter</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.lushen.mrh</groupId>
+				<artifactId>mrh-crypto-spring-boot-starter</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.lushen.mrh</groupId>
+				<artifactId>mrh-dfs-spring-boot-starter</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.lushen.mrh</groupId>
+				<artifactId>mrh-jpa-spring-boot-starter</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.lushen.mrh</groupId>
+				<artifactId>mrh-sequence-spring-boot-starter</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.lushen.mrh</groupId>
+				<artifactId>mrh-springfox-spring-boot-starter</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
 				<version>${org.springframework.boot.version}</version>

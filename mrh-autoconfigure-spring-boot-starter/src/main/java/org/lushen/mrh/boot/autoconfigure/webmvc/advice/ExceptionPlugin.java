@@ -1,6 +1,6 @@
 package org.lushen.mrh.boot.autoconfigure.webmvc.advice;
 
-import org.lushen.mrh.support.generic.view.GenericResult;
+import org.lushen.mrh.boot.autoconfigure.support.view.GenericResult;
 import org.springframework.core.Ordered;
 import org.springframework.plugin.core.Plugin;
 

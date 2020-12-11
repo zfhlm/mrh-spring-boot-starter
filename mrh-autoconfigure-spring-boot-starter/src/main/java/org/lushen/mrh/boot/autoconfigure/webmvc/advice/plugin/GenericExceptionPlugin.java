@@ -2,12 +2,12 @@ package org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.lushen.mrh.boot.autoconfigure.support.error.GenericBizException;
+import org.lushen.mrh.boot.autoconfigure.support.error.GenericException;
+import org.lushen.mrh.boot.autoconfigure.support.error.GenericPayloadException;
+import org.lushen.mrh.boot.autoconfigure.support.error.GenericStatus;
+import org.lushen.mrh.boot.autoconfigure.support.view.GenericResult;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.ExceptionPlugin;
-import org.lushen.mrh.support.generic.exp.GenericBizException;
-import org.lushen.mrh.support.generic.exp.GenericException;
-import org.lushen.mrh.support.generic.exp.GenericPayloadException;
-import org.lushen.mrh.support.generic.status.GenericStatus;
-import org.lushen.mrh.support.generic.view.GenericResult;
 
 /**
  * {@link GenericException}

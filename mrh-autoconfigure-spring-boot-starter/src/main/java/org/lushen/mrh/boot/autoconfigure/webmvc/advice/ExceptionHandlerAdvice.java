@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.lushen.mrh.support.generic.view.GenericResult;
+import org.lushen.mrh.boot.autoconfigure.support.view.GenericResult;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

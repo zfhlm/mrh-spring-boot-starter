@@ -2,9 +2,8 @@ package org.lushen.mrh.boot.autoconfigure.webmvc;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.lushen.mrh.support.generic.enums.GenericEnum;
-import org.lushen.mrh.support.generic.enums.GenericEnumMvcConverterFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.lushen.mrh.boot.autoconfigure.support.enums.GenericEnum;
+import org.lushen.mrh.boot.autoconfigure.support.enums.GenericEnumMvcConverterFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
  * @author hlm
  */
 @Configuration(proxyBeanMethods=false)
-@ConditionalOnClass(GenericEnum.class)
 @ConditionalOnWebApplication(type=Type.SERVLET)
 public class GenericEnumAutoConfiguration {
 

@@ -8,7 +8,6 @@ import org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin.MethodArgumentNotV
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin.MissingRequestHeaderExceptionPlugin;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin.NoHandlerFoundExceptionPlugin;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin.ThrowablePlugin;
-import org.lushen.mrh.support.generic.view.GenericResult;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -27,7 +26,6 @@ import org.springframework.web.servlet.NoHandlerFoundException;
  * @author hlm
  */
 @Configuration(proxyBeanMethods=false)
-@ConditionalOnClass(GenericResult.class)
 @ConditionalOnWebApplication(type=Type.SERVLET)
 public class AdviceAutoConfiguration {
 

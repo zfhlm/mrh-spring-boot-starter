@@ -1,7 +1,7 @@
 package org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin;
 
-import static org.lushen.mrh.support.generic.status.GenericStatus.BIND_PARAM_ERROR;
-import static org.lushen.mrh.support.generic.status.GenericStatus.VALID_PARAM_ERROR;
+import static org.lushen.mrh.boot.autoconfigure.support.error.GenericStatus.BIND_PARAM_ERROR;
+import static org.lushen.mrh.boot.autoconfigure.support.error.GenericStatus.VALID_PARAM_ERROR;
 
 import java.util.Comparator;
 import java.util.List;
@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.lushen.mrh.boot.autoconfigure.support.view.GenericResult;
+import org.lushen.mrh.boot.autoconfigure.support.view.ValidationResult;
+import org.lushen.mrh.boot.autoconfigure.support.view.ValidationResult.Message;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.ExceptionPlugin;
-import org.lushen.mrh.support.generic.view.GenericResult;
-import org.lushen.mrh.support.generic.view.ValidationResult;
-import org.lushen.mrh.support.generic.view.ValidationResult.Message;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;

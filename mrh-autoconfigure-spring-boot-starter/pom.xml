@@ -14,11 +14,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.lushen.mrh</groupId>
-			<artifactId>mrh-supports</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<optional>true</optional>
@@ -54,8 +49,14 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.plugin</groupId>
 			<artifactId>spring-plugin-core</artifactId>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>

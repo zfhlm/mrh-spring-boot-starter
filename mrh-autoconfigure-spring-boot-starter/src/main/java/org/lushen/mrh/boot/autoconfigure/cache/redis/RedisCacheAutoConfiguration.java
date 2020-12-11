@@ -17,6 +17,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.CacheKeyPrefix;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheManager.RedisCacheManagerBuilder;
@@ -25,11 +26,11 @@ import org.springframework.data.redis.serializer.RedisSerializationContext.Seria
 import org.springframework.data.redis.serializer.RedisSerializer;
 
 /**
- * redis 缓存配置
+ * Redis 缓存自动配置
  * 
  * @author hlm
  */
-@Configuration
+@Configuration(proxyBeanMethods=false)
 @EnableConfigurationProperties
 @ConditionalOnProperty(prefix=NAMESPACE, name=ENABLED, havingValue=TRUE, matchIfMissing=false)
 public class RedisCacheAutoConfiguration {
@@ -42,12 +43,18 @@ public class RedisCacheAutoConfiguration {
 
 	static final String TRUE = "true";
 
+	/**
+	 * 注入缓存配置信息
+	 */
 	@Bean
 	@ConfigurationProperties(prefix=NAMESPACE)
 	public RedisCacheProperties redisCacheProperties() {
 		return new RedisCacheProperties();
 	}
 
+	/**
+	 * 注册自定义缓存管理器bean
+	 */
 	@Bean
 	@ConditionalOnMissingBean(RedisCacheManager.class)
 	public RedisCacheManager redisCacheManager(@Autowired RedisConnectionFactory connectionFactory, @Autowired RedisCacheProperties properties) {
@@ -80,7 +87,7 @@ public class RedisCacheAutoConfiguration {
 				config = config.disableKeyPrefix();
 			}
 			if(StringUtils.isNotBlank(properties.getKeyPrefix())) {
-				config = config.prefixKeysWith(properties.getKeyPrefix());
+				config = config.computePrefixWith(CacheKeyPrefix.prefixed(properties.getKeyPrefix()));
 			} else {
 				config = config.disableKeyPrefix();
 			}

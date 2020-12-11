@@ -8,6 +8,6 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 org.lushen.mrh.boot.autoconfigure.cache.CacheAutoConfiguration,\
 org.lushen.mrh.boot.autoconfigure.jackson.JacksonAutoConfiguration,\
 org.lushen.mrh.boot.autoconfigure.jdbc.JdbcTransactionAutoConfiguration,\
-org.lushen.mrh.boot.autoconfigure.validation.ValidationAutoConfiguration,\
-org.lushen.mrh.boot.autoconfigure.web.ErrorHandlerAutoConfiguration,\
-org.lushen.mrh.boot.autoconfigure.web.GenericEnumAutoConfiguration
+org.lushen.mrh.boot.autoconfigure.webmvc.AdviceAutoConfiguration,\
+org.lushen.mrh.boot.autoconfigure.webmvc.GenericEnumAutoConfiguration,\
+org.lushen.mrh.boot.autoconfigure.webmvc.ValidationAutoConfiguration

@@ -1,4 +1,4 @@
-package org.lushen.mrh.boot.autoconfigure.web;
+package org.lushen.mrh.boot.autoconfigure.webmvc.advice;
 
 import org.lushen.mrh.support.generic.view.GenericResult;
 import org.springframework.core.Ordered;
@@ -9,7 +9,7 @@ import org.springframework.plugin.core.Plugin;
  * 
  * @author hlm
  */
-public interface ErrorHandlerPlugin extends Plugin<Throwable>, Ordered {
+public interface ExceptionPlugin extends Plugin<Throwable>, Ordered {
 
 	@Override
 	default int getOrder() {

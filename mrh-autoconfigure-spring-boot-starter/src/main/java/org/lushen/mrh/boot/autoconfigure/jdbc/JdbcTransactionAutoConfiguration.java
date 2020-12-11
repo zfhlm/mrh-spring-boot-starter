@@ -21,8 +21,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.MatchAlwaysTransactionAttributeSource;
@@ -36,7 +36,7 @@ import org.springframework.transaction.interceptor.TransactionInterceptor;
  * 
  * @author hlm
  */
-@Configuration
+@Configuration(proxyBeanMethods=false)
 @Order(Ordered.LOWEST_PRECEDENCE)
 @ConditionalOnBean(ProxyTransactionManagementConfiguration.class)
 public class JdbcTransactionAutoConfiguration {
@@ -44,7 +44,7 @@ public class JdbcTransactionAutoConfiguration {
 	private final Log log = LogFactory.getLog(JdbcTransactionAutoConfiguration.class);
 
 	@Bean
-	public TransactionInterceptor txAdvice(DataSourceTransactionManager txManager){
+	public TransactionInterceptor txAdvice(@Autowired TransactionManager txManager){
 		log.info("Initialize @Transactional interceptor bean " + TransactionInterceptor.class);
 		List<RollbackRuleAttribute> rollbackRules = Collections.singletonList(new RollbackRuleAttribute(Throwable.class)); 
 		TransactionAttribute transactionAttribute = new RuleBasedTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRED, rollbackRules);

@@ -6,6 +6,7 @@ import java.util.TimeZone;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,23 +20,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 
  * @author hlm
  */
-@Configuration
+@Configuration(proxyBeanMethods=false)
 @ConditionalOnClass(ObjectMapper.class)
 public class JacksonAutoConfiguration {
 
 	private final Log log = LogFactory.getLog(JacksonAutoConfiguration.class);
 
+	/**
+	 * 自定义Jackson bean配置
+	 */
 	@Bean
-	public ObjectMapper objectMapper() {
-		log.info("Initialize bean " + ObjectMapper.class);
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-		objectMapper.setSerializationInclusion(Include.NON_NULL);
-		objectMapper.setVisibility(PropertyAccessor.GETTER, Visibility.NONE);
-		objectMapper.setVisibility(PropertyAccessor.SETTER, Visibility.NONE);
-		objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-		objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-		return objectMapper;
+	public Jackson2ObjectMapperBuilderCustomizer mrhJackson2ObjectMapperBuilderCustomizer() {
+		log.info(String.format("Initialize bean %s.", Jackson2ObjectMapperBuilderCustomizer.class));
+		return (builder -> {
+			builder.timeZone(TimeZone.getTimeZone("GMT+8"));
+			builder.dateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+			builder.serializationInclusion(Include.NON_NULL);
+			builder.visibility(PropertyAccessor.GETTER, Visibility.NONE);
+			builder.visibility(PropertyAccessor.SETTER, Visibility.NONE);
+			builder.visibility(PropertyAccessor.FIELD, Visibility.ANY);
+		});
 	}
 
 }

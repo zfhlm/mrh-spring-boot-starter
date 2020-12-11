@@ -1,4 +1,4 @@
-package org.lushen.mrh.boot.autoconfigure.validation;
+package org.lushen.mrh.boot.autoconfigure.webmvc;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * 
  * @author hlm
  */
-@Configuration
+@Configuration(proxyBeanMethods=false)
 @ConditionalOnWebApplication(type=Type.SERVLET)
 public class ValidationAutoConfiguration {
 
@@ -39,49 +39,36 @@ public class ValidationAutoConfiguration {
 	private static final String VALIDATION_RESOURCES = "classpath*:*.properties";
 
 	@Bean
-	public WebMvcConfigurer validatorWebMvcConfigurer(@Autowired MessageSource messageSource) {
+	public WebMvcConfigurer validatorWebMvcConfigurer(@Autowired MessageSource parent) {
+
 		log.info("Initialize validator WebMvcConfigurer, load validation message resouces.");
-		return new ValidationWebMvcConfigurer(messageSource);
-	}
 
-	private static class ValidationWebMvcConfigurer implements WebMvcConfigurer {
-
-		private MessageSource parent;
-
-		public ValidationWebMvcConfigurer(MessageSource parent) {
-			super();
-			this.parent = parent;
-		}
-
-		@Override
-		public Validator getValidator() {
-
-			// 扫描 validation properties 文件
-			List<String> basenames = new ArrayList<String>();
-			try {
-				ResourcePatternResolver patternResolver = ResourcePatternUtils.getResourcePatternResolver(new DefaultResourceLoader());
-				for(Resource resource : patternResolver.getResources(VALIDATION_RESOURCES)) {
-					String filename = StringUtils.substringBeforeLast(resource.getFilename(), ".");
-					if(StringUtils.containsIgnoreCase(filename, VALIDATION)) {
-						basenames.add(filename);
-					}
+		List<String> basenames = new ArrayList<String>();
+		try {
+			ResourcePatternResolver patternResolver = ResourcePatternUtils.getResourcePatternResolver(new DefaultResourceLoader());
+			for(Resource resource : patternResolver.getResources(VALIDATION_RESOURCES)) {
+				String filename = StringUtils.substringBeforeLast(resource.getFilename(), ".");
+				if(StringUtils.containsIgnoreCase(filename, VALIDATION)) {
+					basenames.add(filename);
 				}
-			} catch (Throwable cause) {
-				// ignore
 			}
+		} catch (Throwable cause) {}
 
-			ReloadableResourceBundleMessageSource subMessageSource = new ReloadableResourceBundleMessageSource();
-			subMessageSource.addBasenames(basenames.stream().toArray(len -> new String[len]));
-			subMessageSource.setDefaultEncoding(Charset.defaultCharset().name());
-			subMessageSource.setParentMessageSource(this.parent);
+		ReloadableResourceBundleMessageSource subMessageSource = new ReloadableResourceBundleMessageSource();
+		subMessageSource.addBasenames(basenames.stream().toArray(len -> new String[len]));
+		subMessageSource.setDefaultEncoding(Charset.defaultCharset().name());
+		subMessageSource.setParentMessageSource(parent);
 
-			LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
-			validator.setValidationMessageSource(subMessageSource);
-			validator.setProviderClass(HibernateValidator.class);
+		LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+		validator.setValidationMessageSource(subMessageSource);
+		validator.setProviderClass(HibernateValidator.class);
 
-			return validator;
-		}
-
+		return new WebMvcConfigurer() {
+			@Override
+			public Validator getValidator() {
+				return validator;
+			}
+		};
 	}
 
 }

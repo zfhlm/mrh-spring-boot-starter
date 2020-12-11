@@ -1,8 +1,8 @@
-package org.lushen.mrh.boot.autoconfigure.web.plugin;
+package org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.lushen.mrh.boot.autoconfigure.web.ErrorHandlerPlugin;
+import org.lushen.mrh.boot.autoconfigure.webmvc.advice.ExceptionPlugin;
 import org.lushen.mrh.support.generic.exp.GenericBizException;
 import org.lushen.mrh.support.generic.exp.GenericException;
 import org.lushen.mrh.support.generic.exp.GenericPayloadException;
@@ -14,7 +14,7 @@ import org.lushen.mrh.support.generic.view.GenericResult;
  * 
  * @author hlm
  */
-public class GenericExceptionPlugin implements ErrorHandlerPlugin {
+public class GenericExceptionPlugin implements ExceptionPlugin {
 
 	private final Log log = LogFactory.getLog(getClass().getSimpleName());
 

@@ -1,4 +1,4 @@
-package org.lushen.mrh.boot.autoconfigure.web;
+package org.lushen.mrh.boot.autoconfigure.webmvc;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * 
  * @author hlm
  */
-@Configuration
+@Configuration(proxyBeanMethods=false)
 @ConditionalOnClass(GenericEnum.class)
 @ConditionalOnWebApplication(type=Type.SERVLET)
 public class GenericEnumAutoConfiguration {

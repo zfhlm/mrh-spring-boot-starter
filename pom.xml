@@ -21,7 +21,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven-jar-plugin.version>2.6</maven-jar-plugin.version>
 		<org.lushen.mrh.supports.version>1.0</org.lushen.mrh.supports.version>
-		<org.springframework.boot.version>2.1.9.RELEASE</org.springframework.boot.version>
+		<org.springframework.boot.version>2.3.5.RELEASE</org.springframework.boot.version>
 		<org.mybatis.spring.boot.version>2.1.0</org.mybatis.spring.boot.version>
 		<org.apache.commons.lang3.version>3.9</org.apache.commons.lang3.version>
 		<org.apache.commons.collections4.version>4.4</org.apache.commons.collections4.version>

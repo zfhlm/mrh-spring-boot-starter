@@ -15,13 +15,16 @@ import org.springframework.context.annotation.Import;
  * 
  * @author hlm
  */
-@Configuration
+@Configuration(proxyBeanMethods=false)
 @Import(RedisCacheAutoConfiguration.class)
 @ConditionalOnBean(ProxyCachingConfiguration.class)
 public class CacheAutoConfiguration extends CachingConfigurerSupport {
 
 	private final Log log = LogFactory.getLog(CacheAutoConfiguration.class);
 
+	/**
+	 * 注册自定义缓存key生成器
+	 */
 	@Override
 	public KeyGenerator keyGenerator() {
 		log.info("Initialize bean " + CacheKeyGenerator.class);

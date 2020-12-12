@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
  * 
  * @author hlm
  */
-@Configuration
+@Configuration(proxyBeanMethods=false)
 @EnableConfigurationProperties
 public class FileStoreAutoConfiguration{
 
@@ -46,7 +46,7 @@ public class FileStoreAutoConfiguration{
 	/**
 	 * fastdfs 文件存储客户端配置
 	 */
-	@Configuration
+	@Configuration(proxyBeanMethods=false)
 	@ConditionalOnProperty(prefix=FASTDFS_PREFIX, name=ENABLED, havingValue=TRUE, matchIfMissing=false)
 	public static class FastdfsConfiguration {
 
@@ -68,7 +68,7 @@ public class FileStoreAutoConfiguration{
 	/**
 	 * 磁盘文件存储客户端配置
 	 */
-	@Configuration
+	@Configuration(proxyBeanMethods=false)
 	@ConditionalOnProperty(prefix=DISK_PREFIX, name=ENABLED, havingValue=TRUE, matchIfMissing=false)
 	public static class DiskFileConfiguration {
 
@@ -90,7 +90,7 @@ public class FileStoreAutoConfiguration{
 	/**
 	 * 腾讯云cos文件存储客户端配置
 	 */
-	@Configuration
+	@Configuration(proxyBeanMethods=false)
 	@ConditionalOnProperty(prefix=COS_PREFIX, name=ENABLED, havingValue=TRUE, matchIfMissing=false)
 	public static class TencentCosConfiguration {
 
@@ -112,7 +112,7 @@ public class FileStoreAutoConfiguration{
 	/**
 	 * FTP文件存储客户端配置
 	 */
-	@Configuration
+	@Configuration(proxyBeanMethods=false)
 	@ConditionalOnProperty(prefix=FTP_PREFIX, name=ENABLED, havingValue=TRUE, matchIfMissing=false)
 	public static class FtpFileConfiguration {
 

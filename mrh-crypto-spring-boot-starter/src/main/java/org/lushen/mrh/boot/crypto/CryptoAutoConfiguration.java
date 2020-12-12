@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
  * 
  * @author hlm
  */
-@Configuration
+@Configuration(proxyBeanMethods=false)
 @EnableConfigurationProperties
 public class CryptoAutoConfiguration {
 
@@ -46,7 +46,7 @@ public class CryptoAutoConfiguration {
 		return new NoneCryptoProvider();
 	}
 
-	@Configuration
+	@Configuration(proxyBeanMethods=false)
 	@ConditionalOnProperty(prefix=PROP_AES, name=ENABLED, havingValue=TRUE, matchIfMissing=false)
 	public class AesCryptoConfiguration {
 
@@ -64,7 +64,7 @@ public class CryptoAutoConfiguration {
 
 	}
 
-	@Configuration
+	@Configuration(proxyBeanMethods=false)
 	@ConditionalOnProperty(prefix=PROP_DES, name=ENABLED, havingValue=TRUE, matchIfMissing=false)
 	public class DesCryptoConfiguration {
 
@@ -82,7 +82,7 @@ public class CryptoAutoConfiguration {
 
 	}
 
-	@Configuration
+	@Configuration(proxyBeanMethods=false)
 	@ConditionalOnProperty(prefix=PROP_DES3, name=ENABLED, havingValue=TRUE, matchIfMissing=false)
 	public class Des3CryptoConfiguration {
 

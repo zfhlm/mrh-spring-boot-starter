@@ -1,6 +1,4 @@
-package org.lushen.mrh.boot.springfox.loader.impl;
-
-import org.lushen.mrh.boot.springfox.loader.RuntimeLoader;
+package org.lushen.mrh.boot.autoconfigure.support.runtime;
 
 /**
  * 获取当前运行时启动类

@@ -1,13 +1,17 @@
 package org.lushen.mrh.boot.springfox.plugin;
 
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Optional;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.lushen.mrh.boot.autoconfigure.support.enums.GenericEnum;
+import org.springframework.core.Ordered;
 
+import springfox.documentation.builders.ExampleBuilder;
+import springfox.documentation.service.AllowableListValues;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.schema.ModelPropertyBuilderPlugin;
 import springfox.documentation.spi.schema.contexts.ModelPropertyContext;
@@ -19,7 +23,12 @@ import springfox.documentation.spi.service.contexts.ParameterExpansionContext;
  * 
  * @author hlm
  */
-public class GenericEnumPlugin implements ExpandedParameterBuilderPlugin, ModelPropertyBuilderPlugin {
+public class GenericEnumPlugin implements ExpandedParameterBuilderPlugin, ModelPropertyBuilderPlugin, Ordered {
+
+	@Override
+	public int getOrder() {
+		return LOWEST_PRECEDENCE;
+	}
 
 	@Override
 	public boolean supports(DocumentationType delimiter) {
@@ -28,25 +37,36 @@ public class GenericEnumPlugin implements ExpandedParameterBuilderPlugin, ModelP
 
 	@Override
 	public void apply(ParameterExpansionContext context) {
-		Optional.ofNullable(context.getFieldType().getErasedType()).map(this::description).ifPresent(description -> {
-			context.getRequestParameterBuilder().description(description);
-		});
+		Class<?> fieldType = context.getFieldType().getErasedType();
+		if(GenericEnum.class.isAssignableFrom(fieldType) && Enum.class.isAssignableFrom(fieldType)) {
+			GenericEnum<?>[] contants = (GenericEnum<?>[])fieldType.getEnumConstants();
+			context.getRequestParameterBuilder().example(new ExampleBuilder().value(example(contants)).build());
+		}
 	}
 
 	@Override
 	public void apply(ModelPropertyContext context) {
-		context.getAnnotatedElement().map(e -> ((Field)e).getType()).map(this::description).ifPresent(description -> {
-			context.getSpecificationBuilder().description(description);
-		});
+		
+		
+		AnnotatedElement annotatedElement = context.getAnnotatedElement().orElse(null);
+		if(annotatedElement != null && annotatedElement instanceof Field) {
+			Class<?> fieldType = ((Field)annotatedElement).getType();
+			if(GenericEnum.class.isAssignableFrom(fieldType) && Enum.class.isAssignableFrom(fieldType)) {
+				GenericEnum<?>[] contants = (GenericEnum<?>[])fieldType.getEnumConstants();
+				context.getSpecificationBuilder().enumerationFacet(facetBuilder -> {
+					facetBuilder.allowedValues(new AllowableListValues(values(contants), null));
+				});
+				context.getSpecificationBuilder().example(example(contants));
+			}
+		}
 	}
 
-	private String description(Class<?> filedType) {
-		if(filedType != null && GenericEnum.class.isAssignableFrom(filedType) && Enum.class.isAssignableFrom(filedType)) {
-			GenericEnum<?>[] contants = (GenericEnum<?>[])filedType.getEnumConstants();
-			return Arrays.stream(contants).map(e -> StringUtils.join(e.toValue(), ":", e.toName())).collect(Collectors.joining(", "));
-		} else {
-			return null;
-		}
+	private List<String> values(GenericEnum<?>[] contants) {
+		return Arrays.stream(contants).map(e -> StringUtils.join(e.toValue(), ":", e.toName())).collect(Collectors.toList());
+	}
+
+	private Integer example(GenericEnum<?>[] contants) {
+		return Arrays.stream(contants).findFirst().map(e -> e.toValue()).orElse(null);
 	}
 
 }

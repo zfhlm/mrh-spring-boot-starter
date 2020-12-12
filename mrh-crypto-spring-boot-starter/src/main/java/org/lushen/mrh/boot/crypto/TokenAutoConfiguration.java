@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
  * 
  * @author hlm
  */
-@Configuration
+@Configuration(proxyBeanMethods=false)
 public class TokenAutoConfiguration {
 
 	private final Log log = LogFactory.getLog(TokenAutoConfiguration.class);
@@ -36,7 +36,7 @@ public class TokenAutoConfiguration {
 
 	private static final String CRYPTO = NAMESPACE+".token.crypto";
 
-	@Configuration
+	@Configuration(proxyBeanMethods=false)
 	@EnableConfigurationProperties
 	@ConditionalOnClass(io.jsonwebtoken.Jwt.class)
 	@ConditionalOnProperty(prefix=JWT, name=ENABLED, havingValue=TRUE, matchIfMissing=false)
@@ -56,7 +56,7 @@ public class TokenAutoConfiguration {
 
 	}
 
-	@Configuration
+	@Configuration(proxyBeanMethods=false)
 	@ConditionalOnBean(CryptoProvider.class)
 	@ConditionalOnMissingBean({TokenResolver.class, NoneCryptoProvider.class})
 	@ConditionalOnProperty(prefix=CRYPTO, name=ENABLED, havingValue=TRUE, matchIfMissing=false)

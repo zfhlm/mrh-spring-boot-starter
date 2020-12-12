@@ -17,7 +17,7 @@ import org.springframework.data.repository.config.RepositoryConfigurationExtensi
  * 
  * @author helm
  */
-@Configuration
+@Configuration(proxyBeanMethods=false)
 @ConditionalOnClass(PhysicalNamingStrategy.class)
 @ConditionalOnBean(RepositoryConfigurationExtension.class)
 public class JpaExampleAutoConfiguration {

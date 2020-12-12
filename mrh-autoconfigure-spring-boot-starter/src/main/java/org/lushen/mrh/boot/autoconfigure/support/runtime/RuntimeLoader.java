@@ -1,4 +1,4 @@
-package org.lushen.mrh.boot.springfox.loader;
+package org.lushen.mrh.boot.autoconfigure.support.runtime;
 
 /**
  * 运行时信息加载器

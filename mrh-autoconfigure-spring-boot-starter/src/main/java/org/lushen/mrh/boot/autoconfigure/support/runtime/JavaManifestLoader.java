@@ -1,4 +1,4 @@
-package org.lushen.mrh.boot.springfox.loader.impl;
+package org.lushen.mrh.boot.autoconfigure.support.runtime;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,7 +8,6 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.lushen.mrh.boot.springfox.loader.RuntimeLoader;
 
 /**
  * 启动应用 META-INF/MANIFEST.MF 信息加载器

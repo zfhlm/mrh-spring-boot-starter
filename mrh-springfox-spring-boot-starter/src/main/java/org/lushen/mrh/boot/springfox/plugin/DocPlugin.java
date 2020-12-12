@@ -11,8 +11,7 @@ import org.lushen.mrh.boot.springfox.annotation.DocHidden;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
 
-import com.fasterxml.classmate.TypeResolver;
-
+import springfox.bean.validators.plugins.Validators;
 import springfox.documentation.builders.ApiListingBuilder;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.schema.ModelBuilderPlugin;
@@ -33,15 +32,9 @@ import springfox.documentation.spi.service.contexts.ParameterExpansionContext;
  */
 public class DocPlugin implements ApiListingBuilderPlugin, OperationBuilderPlugin, ModelBuilderPlugin, ExpandedParameterBuilderPlugin, ModelPropertyBuilderPlugin, Ordered {
 
-	private final TypeResolver typeResolver;
-
-	public DocPlugin(TypeResolver typeResolver) {
-		this.typeResolver = typeResolver;
-	}
-
 	@Override
 	public int getOrder() {
-		return LOWEST_PRECEDENCE;
+		return LOWEST_PRECEDENCE - 100;
 	}
 
 	@Override
@@ -49,6 +42,7 @@ public class DocPlugin implements ApiListingBuilderPlugin, OperationBuilderPlugi
 		return true;
 	}
 
+	// 分组配置
 	@Override
 	public void apply(ApiListingContext apiListingContext) {
 		Class<?> controllerClass = apiListingContext.getResourceGroup().getControllerClass().orElse(null);
@@ -59,6 +53,7 @@ public class DocPlugin implements ApiListingBuilderPlugin, OperationBuilderPlugi
 		});
 	}
 
+	//  接口配置
 	@Override
 	public void apply(OperationContext context) {
 		context.findAnnotation(Doc.class).map(Doc::value).filter(StringUtils::isNotBlank).ifPresent(value -> {
@@ -72,14 +67,15 @@ public class DocPlugin implements ApiListingBuilderPlugin, OperationBuilderPlugi
 		});
 	}
 
+	// 参数model配置
 	@Override
 	public void apply(ModelContext context) {
-		Class<?> modelClass = typeResolver.resolve(context.getType()).getErasedType();
-		Optional.ofNullable(AnnotationUtils.findAnnotation(modelClass, Doc.class)).ifPresent(doc -> {
+		Optional.ofNullable(AnnotationUtils.findAnnotation(context.getType().getErasedType(), Doc.class)).ifPresent(doc -> {
 			context.getModelSpecificationBuilder().name(doc.value());
 		});
 	}
 
+	// 表单参数配置
 	@Override
 	public void apply(ParameterExpansionContext context) {
 		context.findAnnotation(Doc.class).ifPresent(doc -> {
@@ -90,15 +86,16 @@ public class DocPlugin implements ApiListingBuilderPlugin, OperationBuilderPlugi
 		});
 	}
 
+	// JSON参数配置
 	@Override
 	public void apply(ModelPropertyContext context) {
-		context.getBeanPropertyDefinition().map(e -> e.getField()).map(e -> e.getAnnotation(Doc.class)).ifPresent(doc -> {
+		Validators.annotationFromField(context, Doc.class).ifPresent(doc -> {
 			context.getSpecificationBuilder().description(doc.value());
 		});
-		context.getBeanPropertyDefinition().map(e -> e.getField()).map(e -> e.getAnnotation(DocHidden.class)).ifPresent(hidden -> {
+		Validators.annotationFromField(context, DocHidden.class).ifPresent(hidden -> {
 			context.getSpecificationBuilder().isHidden(hidden.value());
 		});
-		context.getBeanPropertyDefinition().map(e -> e.getField()).ifPresent(field -> {
+		context.getAnnotatedElement().filter(e -> e instanceof Field).map(e -> (Field)e).ifPresent(field -> {
 			Field[] fields = FieldUtils.getAllFields(field.getDeclaringClass());
 			for(int index=0; index<fields.length; index++) {
 				if(StringUtils.equals(fields[index].getName(), field.getName())) {

@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Configuration;
  * 
  * @author helm
  */
-@Configuration
+@Configuration(proxyBeanMethods=false)
 @EnableConfigurationProperties
 public class SequenceAutoConfiguration {
 
@@ -45,7 +45,7 @@ public class SequenceAutoConfiguration {
 		return new UuidKeyGenerator();
 	}
 
-	@Configuration
+	@Configuration(proxyBeanMethods=false)
 	@ConditionalOnBean(SnowflakeGenerator.class)
 	public static class SnowflakeAutoConfiguration {
 
@@ -70,7 +70,7 @@ public class SequenceAutoConfiguration {
 
 	}
 
-	@Configuration
+	@Configuration(proxyBeanMethods=false)
 	@ConditionalOnBean(CuratorFramework.class)
 	@ConditionalOnMissingBean(SequenceGenerator.class)
 	public static class CuratorAutoConfiguration {

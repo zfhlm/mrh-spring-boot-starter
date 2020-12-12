@@ -2,6 +2,7 @@ package org.lushen.mrh.boot.autoconfigure.webmvc;
 
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.ExceptionHandlerAdvice;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.ExceptionPlugin;
+import org.lushen.mrh.boot.autoconfigure.webmvc.advice.RestResponseBodyAdvice;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin.BindExceptionPlugin;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin.GenericExceptionPlugin;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.plugin.HttpMessageNotReadableExceptionPlugin;
@@ -41,6 +42,12 @@ public class AdviceAutoConfiguration {
 	@ConditionalOnMissingBean(ExceptionHandlerAdvice.class)
 	public ExceptionHandlerAdvice exceptionHandlerAdvice() {
 		return new ExceptionHandlerAdvice();
+	}
+
+	@Bean
+	@ConditionalOnMissingBean(RestResponseBodyAdvice.class)
+	public RestResponseBodyAdvice restResponseBodyAdvice() {
+		return new RestResponseBodyAdvice();
 	}
 
 	@Bean

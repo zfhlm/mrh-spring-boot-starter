@@ -1,8 +1,6 @@
 package org.lushen.mrh.boot.springfox;
 
-import java.text.SimpleDateFormat;
 import java.util.Optional;
-import java.util.TimeZone;
 
 import org.lushen.mrh.boot.autoconfigure.support.enums.GenericEnum;
 import org.lushen.mrh.boot.springfox.annotation.Doc;
@@ -18,9 +16,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.fasterxml.classmate.TypeResolver;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.annotations.ApiOperation;
@@ -29,7 +24,6 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.json.JacksonModuleRegistrar;
 import springfox.documentation.spring.web.plugins.Docket;
 
 /**
@@ -37,7 +31,7 @@ import springfox.documentation.spring.web.plugins.Docket;
  * 
  * @author helm
  */
-@Configuration
+@Configuration(proxyBeanMethods=false)
 @ConditionalOnClass(ApiInfo.class)
 @EnableConfigurationProperties
 public class SpringfoxAutoConfiguration {
@@ -78,30 +72,16 @@ public class SpringfoxAutoConfiguration {
 	}
 
 	@Bean
-	public DocPlugin docPlugin(@Autowired TypeResolver typeResolver) {
-		return new DocPlugin(typeResolver);
+	public DocPlugin docPlugin() {
+		return new DocPlugin();
 	}
 
 	@Bean
 	public JacksonPlugin jacksonPlugin(@Autowired ObjectMapper objectMapper) {
-		return new JacksonPlugin(objectMapper);
+		return new JacksonPlugin(objectMapper.getDateFormat());
 	}
 
-	@Bean
-	public JacksonModuleRegistrar zjacksonModuleRegistrar() {
-		return new JacksonModuleRegistrar() {
-			@Override
-			public void maybeRegisterModule(ObjectMapper objectMapper) {
-				objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-				objectMapper.setVisibility(PropertyAccessor.GETTER, Visibility.NONE);
-				objectMapper.setVisibility(PropertyAccessor.SETTER, Visibility.NONE);
-				objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-				objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-			}
-		};
-	}
-
-	@Configuration
+	@Configuration(proxyBeanMethods=false)
 	@ConditionalOnClass(GenericEnum.class)
 	public static class GenericEnumConfiguration {
 
@@ -112,7 +92,7 @@ public class SpringfoxAutoConfiguration {
 
 	}
 
-	@Configuration
+	@Configuration(proxyBeanMethods=false)
 	@ConditionalOnClass(javax.validation.ConstraintValidator.class)
 	public static class validationConfiguration {
 

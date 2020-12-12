@@ -1,5 +1,10 @@
 package org.lushen.mrh.boot.springfox.plugin;
 
+import javax.validation.constraints.NotEmpty;
+
+import springfox.bean.validators.plugins.Validators;
+import springfox.documentation.builders.PropertySpecificationBuilder;
+import springfox.documentation.builders.RequestParameterBuilder;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.schema.ModelPropertyBuilderPlugin;
 import springfox.documentation.spi.schema.contexts.ModelPropertyContext;
@@ -19,19 +24,15 @@ public class ValidationPlugin implements ExpandedParameterBuilderPlugin, ModelPr
 	}
 
 	@Override
-	public void apply(ModelPropertyContext context) {
-		context.getAnnotatedElement().ifPresent(element -> {
-			if(element.isAnnotationPresent(javax.validation.constraints.NotEmpty.class)) {
-				context.getSpecificationBuilder().required(Boolean.TRUE);
-			}
-		});
+	public void apply(ParameterExpansionContext context) {
+		RequestParameterBuilder builder = context.getRequestParameterBuilder();
+		context.findAnnotation(NotEmpty.class).ifPresent(e -> builder.required(Boolean.TRUE));
 	}
 
 	@Override
-	public void apply(ParameterExpansionContext context) {
-		if(context.findAnnotation(javax.validation.constraints.NotEmpty.class).isPresent()) {
-			context.getRequestParameterBuilder().required(Boolean.TRUE);
-		}
+	public void apply(ModelPropertyContext context) {
+		PropertySpecificationBuilder builder = context.getSpecificationBuilder();
+		Validators.annotationFromField(context, NotEmpty.class).ifPresent(e -> builder.required(Boolean.TRUE));
 	}
 
 }

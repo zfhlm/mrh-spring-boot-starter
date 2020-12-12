@@ -4,12 +4,11 @@ import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import org.apache.commons.lang3.StringUtils;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
+import springfox.bean.validators.plugins.Validators;
 import springfox.documentation.builders.ExampleBuilder;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.schema.ModelPropertyBuilderPlugin;
@@ -24,11 +23,11 @@ import springfox.documentation.spi.service.contexts.ParameterExpansionContext;
  */
 public class JacksonPlugin implements ExpandedParameterBuilderPlugin, ModelPropertyBuilderPlugin {
 
-	private ObjectMapper objectMapper;
+	private DateFormat dateFormat;
 
-	public JacksonPlugin(ObjectMapper objectMapper) {
+	public JacksonPlugin(DateFormat dateFormat) {
 		super();
-		this.objectMapper = objectMapper;
+		this.dateFormat = dateFormat;
 	}
 
 	@Override
@@ -37,39 +36,27 @@ public class JacksonPlugin implements ExpandedParameterBuilderPlugin, ModelPrope
 	}
 
 	@Override
-	public void apply(ModelPropertyContext context) {
-		JsonFormat format = context.getAnnotatedElement().map(e -> e.getAnnotation(JsonFormat.class)).orElse(null);
-		if(format != null && StringUtils.isNotBlank(format.pattern())) {
-			Object example = new SimpleDateFormat(format.pattern()).format(new Date());
-			context.getSpecificationBuilder().example(example);
-		} else {
-			DateFormat dateFormat = objectMapper.getDateFormat();
-			Field field = (Field)context.getAnnotatedElement().orElse(null);
-			if(dateFormat != null && field != null) {
-				if(Date.class.isAssignableFrom(field.getType())) {
-					Object exampleValue = dateFormat.format(new Date());
-					context.getSpecificationBuilder().example(exampleValue);
-				}
+	public void apply(ParameterExpansionContext context) {
+		Optional.ofNullable(context.getFieldType().getErasedType()).ifPresent(fieldType -> {
+			if(Date.class.isAssignableFrom(fieldType)) {
+				context.getRequestParameterBuilder().example(new ExampleBuilder().value(dateFormat.format(new Date())).build());
 			}
-		}
+		});
+		context.findAnnotation(JsonFormat.class).ifPresent(jsonFormat -> {
+			context.getRequestParameterBuilder().example(new ExampleBuilder().value(new SimpleDateFormat(jsonFormat.pattern()).format(new Date())).build());
+		});
 	}
 
 	@Override
-	public void apply(ParameterExpansionContext context) {
-		JsonFormat format = context.findAnnotation(JsonFormat.class).orElse(null);
-		if(format != null && StringUtils.isNotBlank(format.pattern())) {
-			Object example = new SimpleDateFormat(format.pattern()).format(new Date());
-			context.getRequestParameterBuilder().example(new ExampleBuilder().value(example).build());
-		} else {
-			DateFormat dateFormat = objectMapper.getDateFormat();
-			Class<?> filedType = context.getFieldType().getErasedType();
-			if(dateFormat != null && filedType != null) {
-				if(Date.class.isAssignableFrom(filedType)) {
-					Object example = dateFormat.format(new Date());
-					context.getRequestParameterBuilder().example(new ExampleBuilder().value(example).build());
-				}
+	public void apply(ModelPropertyContext context) {
+		context.getAnnotatedElement().filter(e -> e instanceof Field).map(e -> (Field)e).ifPresent(field -> {
+			if(Date.class.isAssignableFrom(field.getType())) {
+				context.getSpecificationBuilder().example(this.dateFormat.format(new Date()));
 			}
-		}
+		});
+		Validators.annotationFromField(context, JsonFormat.class).ifPresent(format -> {
+			context.getSpecificationBuilder().example(new SimpleDateFormat(format.pattern()).format(new Date()));
+		});
 	}
 
 }

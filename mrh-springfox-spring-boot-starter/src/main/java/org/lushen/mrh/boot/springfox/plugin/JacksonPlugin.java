@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -37,26 +36,32 @@ public class JacksonPlugin implements ExpandedParameterBuilderPlugin, ModelPrope
 
 	@Override
 	public void apply(ParameterExpansionContext context) {
-		Optional.ofNullable(context.getFieldType().getErasedType()).ifPresent(fieldType -> {
-			if(Date.class.isAssignableFrom(fieldType)) {
-				context.getRequestParameterBuilder().example(new ExampleBuilder().value(dateFormat.format(new Date())).build());
-			}
-		});
-		context.findAnnotation(JsonFormat.class).ifPresent(jsonFormat -> {
-			context.getRequestParameterBuilder().example(new ExampleBuilder().value(new SimpleDateFormat(jsonFormat.pattern()).format(new Date())).build());
-		});
+		Class<?> fieldType = context.getFieldType().getErasedType();
+		if(Date.class.isAssignableFrom(fieldType)) {
+			context.getRequestParameterBuilder().example(new ExampleBuilder().value(defaultExample()).build());
+			context.findAnnotation(JsonFormat.class).ifPresent(jsonFormat -> {
+				context.getRequestParameterBuilder().example(new ExampleBuilder().value(new SimpleDateFormat(jsonFormat.pattern()).format(new Date())).build());
+			});
+		}
 	}
 
 	@Override
 	public void apply(ModelPropertyContext context) {
-		context.getAnnotatedElement().filter(e -> e instanceof Field).map(e -> (Field)e).ifPresent(field -> {
-			if(Date.class.isAssignableFrom(field.getType())) {
-				context.getSpecificationBuilder().example(this.dateFormat.format(new Date()));
-			}
-		});
-		Validators.annotationFromField(context, JsonFormat.class).ifPresent(format -> {
-			context.getSpecificationBuilder().example(new SimpleDateFormat(format.pattern()).format(new Date()));
-		});
+		Class<?> fieldType = context.getAnnotatedElement().filter(e -> e instanceof Field).map(e -> ((Field)e).getType()).orElse(null);
+		if(Date.class.isAssignableFrom(fieldType)) {
+			context.getSpecificationBuilder().example(defaultExample());
+			Validators.annotationFromField(context, JsonFormat.class).ifPresent(format -> {
+				context.getSpecificationBuilder().example(new SimpleDateFormat(format.pattern()).format(new Date()));
+			});
+		}
+	}
+
+	private String defaultExample() {
+		if(this.dateFormat == null) {
+			return null;
+		} else {
+			return this.dateFormat.format(new Date());
+		}
 	}
 
 }

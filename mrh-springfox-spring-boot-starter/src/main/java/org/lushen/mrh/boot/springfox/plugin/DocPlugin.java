@@ -1,11 +1,9 @@
 package org.lushen.mrh.boot.springfox.plugin;
 
-import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.lushen.mrh.boot.springfox.annotation.Doc;
 import org.lushen.mrh.boot.springfox.annotation.DocHidden;
 import org.springframework.core.Ordered;
@@ -26,7 +24,7 @@ import springfox.documentation.spi.service.contexts.OperationContext;
 import springfox.documentation.spi.service.contexts.ParameterExpansionContext;
 
 /**
- * 自定义注解 文档扩展组件
+ * 自定义注解 {@link Doc} 和 {@link DocHidden} 文档扩展组件
  * 
  * @author hlm
  */
@@ -34,7 +32,7 @@ public class DocPlugin implements ApiListingBuilderPlugin, OperationBuilderPlugi
 
 	@Override
 	public int getOrder() {
-		return LOWEST_PRECEDENCE - 100;
+		return HIGHEST_PRECEDENCE + 10000;
 	}
 
 	@Override
@@ -71,7 +69,7 @@ public class DocPlugin implements ApiListingBuilderPlugin, OperationBuilderPlugi
 	@Override
 	public void apply(ModelContext context) {
 		Optional.ofNullable(AnnotationUtils.findAnnotation(context.getType().getErasedType(), Doc.class)).ifPresent(doc -> {
-			context.getModelSpecificationBuilder().name(doc.value());
+			//context.getModelSpecificationBuilder().facets(f -> f.description(doc.value()));
 		});
 	}
 
@@ -94,14 +92,6 @@ public class DocPlugin implements ApiListingBuilderPlugin, OperationBuilderPlugi
 		});
 		Validators.annotationFromField(context, DocHidden.class).ifPresent(hidden -> {
 			context.getSpecificationBuilder().isHidden(hidden.value());
-		});
-		context.getAnnotatedElement().filter(e -> e instanceof Field).map(e -> (Field)e).ifPresent(field -> {
-			Field[] fields = FieldUtils.getAllFields(field.getDeclaringClass());
-			for(int index=0; index<fields.length; index++) {
-				if(StringUtils.equals(fields[index].getName(), field.getName())) {
-					context.getSpecificationBuilder().position(index);
-				}
-			}
 		});
 	}
 

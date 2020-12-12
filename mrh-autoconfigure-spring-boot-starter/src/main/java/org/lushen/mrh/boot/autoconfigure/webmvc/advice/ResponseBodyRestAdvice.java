@@ -5,10 +5,12 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.lushen.mrh.boot.autoconfigure.support.error.GenericStatus;
+import org.lushen.mrh.boot.autoconfigure.support.page.Page;
 import org.lushen.mrh.boot.autoconfigure.support.runtime.BootManifestLoader;
 import org.lushen.mrh.boot.autoconfigure.support.runtime.JavaCommandLoader;
 import org.lushen.mrh.boot.autoconfigure.support.view.GenericResult;
 import org.lushen.mrh.boot.autoconfigure.support.view.MultipleResult;
+import org.lushen.mrh.boot.autoconfigure.support.view.PageableResult;
 import org.lushen.mrh.boot.autoconfigure.support.view.SingleResult;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.MethodParameter;
@@ -25,12 +27,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * @author hlm
  */
 @ControllerAdvice
-public class RestResponseBodyAdvice implements ResponseBodyAdvice<Object>, InitializingBean {
+public class ResponseBodyRestAdvice implements ResponseBodyAdvice<Object>, InitializingBean {
 
-	protected String basePackage;
+	protected String basePackage;	// 切面生效的包名
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		// 初始化为启动类所在包及其子包
 		Optional.ofNullable(new BootManifestLoader().load().getStartClass()).ifPresent(startClass -> {
 			try {
 				basePackage = Class.forName(startClass).getPackage().getName();
@@ -57,6 +60,10 @@ public class RestResponseBodyAdvice implements ResponseBodyAdvice<Object>, Initi
 		}
 		else if(body instanceof Object[]) {
 			return new MultipleResult(status.getErrcode(), status.getErrmsg(), (Object[])body);
+		}
+		else if(body instanceof Page) {
+			Page<?> page = (Page<?>) body;
+			return new PageableResult(status.getErrcode(), status.getErrmsg(), page.getDatas(), page.getTotals());
 		}
 		else {
 			return new SingleResult(status.getErrcode(), status.getErrmsg(), body);

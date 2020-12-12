@@ -22,12 +22,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @SpringBootApplication
 @ActiveOpenApi(profiles={"default", "test", "dev"})
-public class TestSpringfox {
+public class TestSpringfoxBootStarter {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TestSpringfox.class, args);
+		SpringApplication.run(TestSpringfoxBootStarter.class, args);
 	}
-	
+
 	public static interface TestInterface {
 
 		@Doc("测试接口")
@@ -162,16 +162,16 @@ public class TestSpringfox {
 		}
 
 	}
-	
+
 	public static enum TestEnum implements GenericEnum<TestEnum> {
-		
+
 		PNG(1, "PNG"),
 		JPG(2, "JPG");
 
 		private Integer value;
-		
+
 		private String name;
-		
+
 		private TestEnum(Integer value, String name) {
 			this.value = value;
 			this.name = name;
@@ -191,7 +191,7 @@ public class TestSpringfox {
 		public String toString() {
 			return String.valueOf(this.value);
 		}
-		
+
 	}
 
 }

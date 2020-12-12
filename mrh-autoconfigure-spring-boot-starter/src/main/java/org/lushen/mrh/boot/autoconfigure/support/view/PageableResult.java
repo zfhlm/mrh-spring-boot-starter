@@ -11,12 +11,12 @@ public final class PageableResult extends GenericResult {
 
 	private List<?> datas;
 
-	private long total;
+	private long totals;
 
-	public PageableResult(int errcode, String errmsg, List<?> datas, long total) {
+	public PageableResult(int errcode, String errmsg, List<?> datas, long totals) {
 		super(errcode, errmsg);
 		this.datas = datas;
-		this.total = total;
+		this.totals = totals;
 	}
 
 	/**
@@ -33,8 +33,8 @@ public final class PageableResult extends GenericResult {
 	 * 
 	 * @return
 	 */
-	public void setTotal(long total) {
-		this.total = total;
+	public void setTotals(long totals) {
+		this.totals = totals;
 	}
 
 	/**
@@ -51,8 +51,8 @@ public final class PageableResult extends GenericResult {
 	 * 
 	 * @return
 	 */
-	public long getTotal() {
-		return total;
+	public long getTotals() {
+		return totals;
 	}
 
 	@Override
@@ -60,8 +60,8 @@ public final class PageableResult extends GenericResult {
 		StringBuilder builder = new StringBuilder();
 		builder.append("[datas=");
 		builder.append(datas);
-		builder.append(", total=");
-		builder.append(total);
+		builder.append(", totals=");
+		builder.append(totals);
 		builder.append(", errcode=");
 		builder.append(errcode);
 		builder.append(", errmsg=");

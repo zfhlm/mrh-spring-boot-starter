@@ -4,23 +4,36 @@ import java.lang.reflect.Field;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.springframework.core.Ordered;
 
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.schema.ModelPropertyBuilderPlugin;
 import springfox.documentation.spi.schema.contexts.ModelPropertyContext;
 import springfox.documentation.spi.service.ExpandedParameterBuilderPlugin;
+import springfox.documentation.spi.service.OperationBuilderPlugin;
+import springfox.documentation.spi.service.contexts.OperationContext;
 import springfox.documentation.spi.service.contexts.ParameterExpansionContext;
 
 /**
- * 根据 Java bean fields 下标进行排序
+ * 排序扩展，3.0.0 官方bug暂时无法生效
  * 
  * @author hlm
  */
-public class PositionPlugin implements ExpandedParameterBuilderPlugin, ModelPropertyBuilderPlugin {
+public class PositionPlugin implements ExpandedParameterBuilderPlugin, ModelPropertyBuilderPlugin, OperationBuilderPlugin, Ordered {
+
+	@Override
+	public int getOrder() {
+		return HIGHEST_PRECEDENCE;
+	}
 
 	@Override
 	public boolean supports(DocumentationType delimiter) {
 		return true;
+	}
+
+	@Override
+	public void apply(OperationContext context) {
+		
 	}
 
 	@Override

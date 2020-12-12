@@ -69,6 +69,7 @@ public class DocPlugin implements ApiListingBuilderPlugin, OperationBuilderPlugi
 	@Override
 	public void apply(ModelContext context) {
 		Optional.ofNullable(AnnotationUtils.findAnnotation(context.getType().getErasedType(), Doc.class)).ifPresent(doc -> {
+			// 不显示注释
 			//context.getModelSpecificationBuilder().facets(f -> f.description(doc.value()));
 		});
 	}

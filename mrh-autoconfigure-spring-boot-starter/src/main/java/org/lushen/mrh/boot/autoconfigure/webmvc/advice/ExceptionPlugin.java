@@ -11,6 +11,18 @@ import org.springframework.plugin.core.Plugin;
  */
 public interface ExceptionPlugin extends Plugin<Throwable>, Ordered {
 
+	/**
+	 * 插件名称
+	 * 
+	 * @return
+	 */
+	default String getName() {
+		return getClass().getName();
+	}
+
+	/**
+	 * 插件权重
+	 */
 	@Override
 	default int getOrder() {
 		return 0;
@@ -23,14 +35,5 @@ public interface ExceptionPlugin extends Plugin<Throwable>, Ordered {
 	 * @return
 	 */
 	public GenericResult handle(Throwable cause);
-
-	/**
-	 * 获取插件名称
-	 * 
-	 * @return
-	 */
-	default String nameForPlugin() {
-		return getClass().getName();
-	}
 
 }

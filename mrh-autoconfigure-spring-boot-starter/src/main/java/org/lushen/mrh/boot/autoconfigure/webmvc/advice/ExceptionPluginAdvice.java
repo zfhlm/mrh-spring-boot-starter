@@ -29,10 +29,10 @@ public class ExceptionPluginAdvice implements InitializingBean, ExceptionAdvice 
 	private final Log log = LogFactory.getLog(ExceptionPluginAdvice.class);
 
 	@Autowired
-	private PluginRegistry<ExceptionPlugin, Throwable> registry;
+	protected PluginRegistry<ExceptionPlugin, Throwable> registry;
 
 	@Autowired
-	private ObjectMapper objectMapper;
+	protected ObjectMapper objectMapper;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {

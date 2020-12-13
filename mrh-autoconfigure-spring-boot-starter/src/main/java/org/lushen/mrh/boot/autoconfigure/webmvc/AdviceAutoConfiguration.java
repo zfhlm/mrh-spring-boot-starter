@@ -1,5 +1,7 @@
 package org.lushen.mrh.boot.autoconfigure.webmvc;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.ExceptionAdvice;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.ExceptionPlugin;
 import org.lushen.mrh.boot.autoconfigure.webmvc.advice.ExceptionPluginAdvice;
@@ -35,6 +37,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @Configuration(proxyBeanMethods=false)
 @ConditionalOnWebApplication(type=Type.SERVLET)
 public class AdviceAutoConfiguration {
+	
+	private final Log log = LogFactory.getLog(getClass());
 
 	@EnablePluginRegistries(ExceptionPlugin.class)
 	@Configuration(proxyBeanMethods=false)
@@ -43,12 +47,14 @@ public class AdviceAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(ExceptionAdvice.class)
 	public ExceptionAdvice exceptionAdvice() {
+		log.info(String.format("Initialize bean %s.", ExceptionPluginAdvice.class));
 		return new ExceptionPluginAdvice();
 	}
 
 	@Bean
 	@ConditionalOnMissingBean(ResponseAdvice.class)
 	public ResponseAdvice responseAdvice() {
+		log.info(String.format("Initialize bean %s.", ResponseRestAdvice.class));
 		return new ResponseRestAdvice();
 	}
 

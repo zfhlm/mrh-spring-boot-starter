@@ -52,6 +52,9 @@ public class ResponseRestAdvice implements ResponseAdvice, InitializingBean {
 		if(body == null) {
 			return new GenericResult(status.getErrcode(), status.getErrmsg());
 		}
+		else if(body instanceof GenericResult) {
+			return body;
+		}
 		else if(body instanceof Collection) {
 			return new MultipleResult(status.getErrcode(), status.getErrmsg(), (Collection<?>)body);
 		}

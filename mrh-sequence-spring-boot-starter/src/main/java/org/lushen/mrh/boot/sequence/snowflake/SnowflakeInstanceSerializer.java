@@ -11,18 +11,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 
  * @author hlm
  */
-public class SnowflakeInstanceSerializer implements SequenceInstanceSerializer<SnowflakeInstancePayload> {
+public class SnowflakeInstanceSerializer implements SequenceInstanceSerializer<SnowflakePayload> {
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
-	public byte[] serialize(SequenceInstance<SnowflakeInstancePayload> instance) throws Exception {
+	public byte[] serialize(SequenceInstance<SnowflakePayload> instance) throws Exception {
 		return this.objectMapper.writeValueAsBytes(instance);
 	}
 
 	@Override
-	public SequenceInstance<SnowflakeInstancePayload> deserialize(byte[] buffer) throws Exception {
-		return this.objectMapper.readValue(buffer, new TypeReference<SequenceInstance<SnowflakeInstancePayload>>(){});
+	public SequenceInstance<SnowflakePayload> deserialize(byte[] buffer) throws Exception {
+		return this.objectMapper.readValue(buffer, new TypeReference<SequenceInstance<SnowflakePayload>>(){});
 	}
 
 }

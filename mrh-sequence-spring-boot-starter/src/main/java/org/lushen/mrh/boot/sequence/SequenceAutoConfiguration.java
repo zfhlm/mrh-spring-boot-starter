@@ -8,7 +8,7 @@ import org.lushen.mrh.boot.sequence.registry.supports.ZookeeperSequenceInstanceR
 import org.lushen.mrh.boot.sequence.single.Sequence2KeyGenerator;
 import org.lushen.mrh.boot.sequence.single.UuidKeyGenerator;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeInstanceCustomizer;
-import org.lushen.mrh.boot.sequence.snowflake.SnowflakeInstancePayload;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakePayload;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeInstanceSerializer;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeProperties;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeRegistryGenerator;
@@ -73,7 +73,7 @@ public class SequenceAutoConfiguration {
 	public class ZookeeperRegistryAutoConfiguration extends RegistryAutoConfiguration {
 
 		@Bean
-		public SequenceInstanceRepository<SnowflakeInstancePayload> sequenceInstanceRepository(
+		public SequenceInstanceRepository<SnowflakePayload> sequenceInstanceRepository(
 				@Autowired SnowflakeProperties properties,
 				@Autowired SnowflakeInstanceSerializer instanceSerializer,
 				@Autowired SnowflakeInstanceCustomizer instanceCustomizer,
@@ -85,7 +85,7 @@ public class SequenceAutoConfiguration {
 		@Bean
 		public SequenceGenerator sequenceGenerator(
 				@Autowired SnowflakeProperties properties,
-				@Autowired SequenceInstanceRepository<SnowflakeInstancePayload> instanceRepository) {
+				@Autowired SequenceInstanceRepository<SnowflakePayload> instanceRepository) {
 			log.info("Initializing bean " + SnowflakeRegistryGenerator.class.getName());
 			return new SnowflakeRegistryGenerator(properties.getLiveTimeMillis(), instanceRepository);
 		}

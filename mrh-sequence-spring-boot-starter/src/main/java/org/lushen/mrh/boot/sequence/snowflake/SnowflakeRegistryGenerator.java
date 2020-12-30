@@ -22,9 +22,9 @@ public class SnowflakeRegistryGenerator extends MasterSequenceGenerator {
 
 	private long liveTimeMillis;
 
-	private SequenceInstanceRepository<SnowflakeInstancePayload> instanceRepository;
+	private SequenceInstanceRepository<SnowflakePayload> instanceRepository;
 
-	public SnowflakeRegistryGenerator(long liveTimeMillis, SequenceInstanceRepository<SnowflakeInstancePayload> instanceRepository) {
+	public SnowflakeRegistryGenerator(long liveTimeMillis, SequenceInstanceRepository<SnowflakePayload> instanceRepository) {
 		super();
 		this.liveTimeMillis = liveTimeMillis;
 		this.instanceRepository = instanceRepository;
@@ -41,19 +41,19 @@ public class SnowflakeRegistryGenerator extends MasterSequenceGenerator {
 			String id = id(centerId, workerId);
 
 			// 查询节点
-			SequenceInstance<SnowflakeInstancePayload> instance = this.instanceRepository.findById(id);
+			SequenceInstance<SnowflakePayload> instance = this.instanceRepository.findById(id);
 
 			if(instance == null || instance.getPayload().getExpiredAt() < current) {
 
 				// 负载信息
-				SnowflakeInstancePayload payload = new SnowflakeInstancePayload();
+				SnowflakePayload payload = new SnowflakePayload();
 				payload.setCenterId(centerId);
 				payload.setWorkerId(workerId);
 				payload.setEffectAt(current);
 				payload.setExpiredAt(current + this.liveTimeMillis);
 
 				// 实例信息
-				SequenceInstance<SnowflakeInstancePayload> newInstance = new SequenceInstance<SnowflakeInstancePayload>();
+				SequenceInstance<SnowflakePayload> newInstance = new SequenceInstance<SnowflakePayload>();
 				newInstance.setId(id);
 				newInstance.setName(id);
 				newInstance.setPayload(payload);

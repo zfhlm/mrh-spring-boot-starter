@@ -7,7 +7,7 @@ import java.io.Serializable;
  * 
  * @author hlm
  */
-public class SnowflakeInstancePayload implements Serializable {
+public class SnowflakePayload implements Serializable {
 
 	private static final long serialVersionUID = -3216891116277674535L;
 

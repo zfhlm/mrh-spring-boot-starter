@@ -5,7 +5,7 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryForever;
 import org.lushen.mrh.boot.sequence.registry.supports.ZookeeperSequenceInstanceRepository;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeInstanceCustomizer;
-import org.lushen.mrh.boot.sequence.snowflake.SnowflakeInstancePayload;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakePayload;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeInstanceSerializer;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeProperties;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeRegistryGenerator;
@@ -24,7 +24,7 @@ public class TestZookeeper {
 		
 		SnowflakeInstanceSerializer instanceSerializer = new SnowflakeInstanceSerializer();
 		SnowflakeInstanceCustomizer instanceCustomizer = new SnowflakeInstanceCustomizer();
-		ZookeeperSequenceInstanceRepository<SnowflakeInstancePayload> instanceRepository = 
+		ZookeeperSequenceInstanceRepository<SnowflakePayload> instanceRepository = 
 				new ZookeeperSequenceInstanceRepository<>(instanceSerializer, instanceCustomizer, client, properties.getBasePath());
 		instanceRepository.afterPropertiesSet();
 		

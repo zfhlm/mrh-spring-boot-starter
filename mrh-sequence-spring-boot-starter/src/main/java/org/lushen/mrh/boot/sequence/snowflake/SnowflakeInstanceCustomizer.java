@@ -8,10 +8,10 @@ import org.lushen.mrh.boot.sequence.registry.SequenceInstanceCustomizer;
  * 
  * @author hlm
  */
-public class SnowflakeInstanceCustomizer implements SequenceInstanceCustomizer<SnowflakeInstancePayload> {
+public class SnowflakeInstanceCustomizer implements SequenceInstanceCustomizer<SnowflakePayload> {
 
 	@Override
-	public void customize(SequenceInstance<SnowflakeInstancePayload> instance) {
+	public void customize(SequenceInstance<SnowflakePayload> instance) {
 		// nothing to do default
 	}
 

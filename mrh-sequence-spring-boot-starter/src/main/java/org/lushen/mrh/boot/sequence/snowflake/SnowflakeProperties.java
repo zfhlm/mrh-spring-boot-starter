@@ -34,7 +34,7 @@ public class SnowflakeProperties {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SnowflakeProperties [basePath=");
+		builder.append("[basePath=");
 		builder.append(basePath);
 		builder.append(", liveTimeMillis=");
 		builder.append(liveTimeMillis);

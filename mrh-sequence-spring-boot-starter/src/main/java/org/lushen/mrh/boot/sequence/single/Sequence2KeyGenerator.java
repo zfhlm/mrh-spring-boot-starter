@@ -8,11 +8,11 @@ import org.lushen.mrh.boot.sequence.SequenceGenerator;
  * 
  * @author hlm
  */
-public class SequenceKeyGenerator implements KeyGenerator {
+public class Sequence2KeyGenerator implements KeyGenerator {
 
 	private SequenceGenerator generator;
 
-	public SequenceKeyGenerator(SequenceGenerator generator) {
+	public Sequence2KeyGenerator(SequenceGenerator generator) {
 		super();
 		this.generator = generator;
 	}

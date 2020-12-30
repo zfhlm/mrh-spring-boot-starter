@@ -21,7 +21,14 @@ public class TestAutoConfigure {
 
 	@Test
 	public void test() {
-		System.out.println(sequenceGenerator.generate());
+		while(true) {
+			System.out.println(sequenceGenerator.generate());
+			try {
+				Thread.sleep(500L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

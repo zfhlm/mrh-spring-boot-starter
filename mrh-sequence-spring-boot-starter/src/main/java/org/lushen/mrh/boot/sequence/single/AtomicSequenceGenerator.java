@@ -14,7 +14,11 @@ public class AtomicSequenceGenerator implements SequenceGenerator {
 	private final AtomicLong atomic;
 
 	public AtomicSequenceGenerator() {
-		this(new AtomicLong(0));
+		this(0L);
+	}
+
+	public AtomicSequenceGenerator(long seed) {
+		this(new AtomicLong(seed));
 	}
 
 	public AtomicSequenceGenerator(AtomicLong atomic) {

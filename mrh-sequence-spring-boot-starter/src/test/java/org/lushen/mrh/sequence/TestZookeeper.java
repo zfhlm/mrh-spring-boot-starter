@@ -3,9 +3,12 @@ package org.lushen.mrh.sequence;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryForever;
-import org.lushen.mrh.boot.sequence.snowflake.SnowflakeGenerator;
+import org.lushen.mrh.boot.sequence.registry.supports.ZookeeperSequenceInstanceRepository;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeInstanceCustomizer;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeInstancePayload;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeInstanceSerializer;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeProperties;
-import org.lushen.mrh.boot.sequence.snowflake.factory.SnowflakeCuratorFactory;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeRegistryGenerator;
 
 public class TestZookeeper {
 
@@ -18,13 +21,14 @@ public class TestZookeeper {
 		client.start();
 
 		SnowflakeProperties properties = new SnowflakeProperties();
-		properties.setBasePath("/snowflake");
-		properties.setLiveTimeMillis(5*60*1000L);
-
-		SnowflakeCuratorFactory factory = new SnowflakeCuratorFactory(client, properties, e -> {});
-		factory.afterPropertiesSet();
-
-		SnowflakeGenerator generator = new SnowflakeGenerator(factory);
+		
+		SnowflakeInstanceSerializer instanceSerializer = new SnowflakeInstanceSerializer();
+		SnowflakeInstanceCustomizer instanceCustomizer = new SnowflakeInstanceCustomizer();
+		ZookeeperSequenceInstanceRepository<SnowflakeInstancePayload> instanceRepository = 
+				new ZookeeperSequenceInstanceRepository<>(instanceSerializer, instanceCustomizer, client, properties.getBasePath());
+		instanceRepository.afterPropertiesSet();
+		
+		SnowflakeRegistryGenerator generator = new SnowflakeRegistryGenerator(properties.getLiveTimeMillis(), instanceRepository);
 		generator.afterPropertiesSet();
 
 		while(true) {

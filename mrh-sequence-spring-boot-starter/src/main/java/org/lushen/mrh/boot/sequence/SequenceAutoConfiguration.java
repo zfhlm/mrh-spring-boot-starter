@@ -3,22 +3,22 @@ package org.lushen.mrh.boot.sequence;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.curator.framework.CuratorFramework;
-import org.lushen.mrh.boot.sequence.single.SequenceKeyGenerator;
+import org.lushen.mrh.boot.sequence.registry.SequenceInstanceRepository;
+import org.lushen.mrh.boot.sequence.registry.supports.ZookeeperSequenceInstanceRepository;
+import org.lushen.mrh.boot.sequence.single.Sequence2KeyGenerator;
 import org.lushen.mrh.boot.sequence.single.UuidKeyGenerator;
-import org.lushen.mrh.boot.sequence.snowflake.SnowflakeCustomizer;
-import org.lushen.mrh.boot.sequence.snowflake.SnowflakeFactory;
-import org.lushen.mrh.boot.sequence.snowflake.SnowflakeGenerator;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeInstanceCustomizer;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeInstancePayload;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeInstanceSerializer;
 import org.lushen.mrh.boot.sequence.snowflake.SnowflakeProperties;
-import org.lushen.mrh.boot.sequence.snowflake.factory.SnowflakeCuratorFactory;
+import org.lushen.mrh.boot.sequence.snowflake.SnowflakeRegistryGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 
 /**
  * generator 自动配置
@@ -26,54 +26,25 @@ import org.springframework.context.annotation.Configuration;
  * @author helm
  */
 @Configuration(proxyBeanMethods=false)
-@EnableConfigurationProperties
 public class SequenceAutoConfiguration {
 
-	private static final Log log = LogFactory.getLog(SequenceAutoConfiguration.class);
+	private final Log log = LogFactory.getLog(SequenceAutoConfiguration.class);
 
 	@Bean
 	@ConditionalOnBean(SequenceGenerator.class)
-	public KeyGenerator sequenceKeyGenerator(@Autowired SequenceGenerator generator) {
-		log.info("Initialize key generator with sequence generator.");
-		return new SequenceKeyGenerator(generator);
+	public KeyGenerator sequence2KeyGenerator(@Autowired SequenceGenerator generator) {
+		log.info("Initializing key generator with sequence generator.");
+		return new Sequence2KeyGenerator(generator);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean(KeyGenerator.class)
 	public KeyGenerator uuidKeyGenerator() {
-		log.info("Initialize uuid key generator.");
+		log.info("Initializing uuid key generator.");
 		return new UuidKeyGenerator();
 	}
 
-	@Configuration(proxyBeanMethods=false)
-	@ConditionalOnBean(SnowflakeGenerator.class)
-	public static class SnowflakeAutoConfiguration {
-
-		@Bean
-		@ConditionalOnMissingBean(SnowflakeCustomizer.class)
-		public SnowflakeCustomizer snowflakeCustomizer(@Autowired ApplicationContext applicationContext) {
-			ServerProperties properties = applicationContext.getBeansOfType(ServerProperties.class).values().stream().findFirst().orElse(null);
-			if(properties == null) {
-				return (payload -> {
-					payload.setId(applicationContext.getId());
-					payload.setName(applicationContext.getApplicationName());
-				});
-			} else {
-				return (payload -> {
-					payload.setId(applicationContext.getId());
-					payload.setName(applicationContext.getApplicationName());
-					payload.setAddress(String.valueOf(properties.getAddress()));
-					payload.setPort(properties.getPort());
-				});
-			}
-		}
-
-	}
-
-	@Configuration(proxyBeanMethods=false)
-	@ConditionalOnBean(CuratorFramework.class)
-	@ConditionalOnMissingBean(SequenceGenerator.class)
-	public static class CuratorAutoConfiguration {
+	public class RegistryAutoConfiguration {
 
 		@Bean
 		@ConfigurationProperties(prefix="org.lushen.mrh.sequence")
@@ -82,19 +53,51 @@ public class SequenceAutoConfiguration {
 		}
 
 		@Bean
-		public SnowflakeFactory snowflakeFactory(
-				@Autowired CuratorFramework client, 
-				@Autowired SnowflakeProperties properties, 
-				@Autowired SnowflakeCustomizer customizer) {
-			log.info("Intitle snowflake curator factory.");
-			return new SnowflakeCuratorFactory(client, properties, customizer);
+		@ConditionalOnMissingBean
+		public SnowflakeInstanceSerializer snowflakeInstanceSerializer() {
+			log.info("Initializing bean " + SnowflakeInstanceSerializer.class.getName());
+			return new SnowflakeInstanceSerializer();
 		}
 
 		@Bean
-		public SnowflakeGenerator snowflakeGenerator(@Autowired SnowflakeFactory factory) {
-			log.info("Intitle snowflake curator generator.");
-			return new SnowflakeGenerator(factory);
+		@ConditionalOnMissingBean
+		public SnowflakeInstanceCustomizer snowflakeInstanceCustomizer() {
+			log.info("Initializing bean " + SnowflakeInstanceCustomizer.class.getName());
+			return new SnowflakeInstanceCustomizer();
 		}
+
+	}
+
+	@Configuration(proxyBeanMethods=false)
+	@ConditionalOnBean(CuratorFramework.class)
+	public class ZookeeperRegistryAutoConfiguration extends RegistryAutoConfiguration {
+
+		@Bean
+		public SequenceInstanceRepository<SnowflakeInstancePayload> sequenceInstanceRepository(
+				@Autowired SnowflakeProperties properties,
+				@Autowired SnowflakeInstanceSerializer instanceSerializer,
+				@Autowired SnowflakeInstanceCustomizer instanceCustomizer,
+				@Autowired CuratorFramework client) {
+			log.info("Initializing bean " + ZookeeperSequenceInstanceRepository.class.getName());
+			return new ZookeeperSequenceInstanceRepository<>(instanceSerializer, instanceCustomizer, client, properties.getBasePath());
+		}
+
+		@Bean
+		public SequenceGenerator sequenceGenerator(
+				@Autowired SnowflakeProperties properties,
+				@Autowired SequenceInstanceRepository<SnowflakeInstancePayload> instanceRepository) {
+			log.info("Initializing bean " + SnowflakeRegistryGenerator.class.getName());
+			return new SnowflakeRegistryGenerator(properties.getLiveTimeMillis(), instanceRepository);
+		}
+
+	}
+
+	@Configuration(proxyBeanMethods=false)
+	@ConditionalOnBean(RedisConnectionFactory.class)
+	@ConditionalOnMissingBean(SequenceGenerator.class)
+	public class RedisRegistryAutoConfiguration extends RegistryAutoConfiguration {
+
+
 
 	}
 

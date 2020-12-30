@@ -1,15 +1,13 @@
-package org.lushen.mrh.boot.sequence.snowflake;
+package org.lushen.mrh.boot.sequence.single;
+
+import org.lushen.mrh.boot.sequence.SequenceGenerator;
 
 /**
- * 雪花ID生成实现
+ * 推特snowflake 序列ID生成器
  * 
  * @author hlm
  */
-public final class SnowflakeWorker {
-
-	public static final long blockMoveState = -1L;
-
-	public static final long expiredState = -2L;
+public class SnowflakeSequenceGenerator implements SequenceGenerator {
 
 	public static final long twepoch = 1606355403673L;
 
@@ -41,11 +39,11 @@ public final class SnowflakeWorker {
 
 	private long expiredAt;
 
-	public SnowflakeWorker(SnowflakePayload payload) {
-		this(payload.getCenterId(), payload.getWorkerId(), payload.getBeginAt(), payload.getExpiredAt());
+	public SnowflakeSequenceGenerator(int centerId, int workerId) {
+		this(centerId, workerId, System.currentTimeMillis(), Long.MAX_VALUE);
 	}
 
-	private SnowflakeWorker(int centerId, int workerId, long beginAt, long expiredAt) {
+	public SnowflakeSequenceGenerator(int centerId, int workerId, long lastTimestamp, long expiredAt) {
 		super();
 		if (centerId > maxCenterId || centerId < 0) {
 			throw new IllegalArgumentException(String.format("centerId can't be greater than %d or less than 0", maxCenterId));
@@ -55,17 +53,18 @@ public final class SnowflakeWorker {
 		}
 		this.centerId = centerId;
 		this.workerId = workerId;
-		this.lastTimestamp = beginAt;
+		this.lastTimestamp = lastTimestamp;
 		this.expiredAt = expiredAt;
 	}
 
-	public Long generate() {
+	@Override
+	public synchronized Long generate() {
 
 		long timestamp = timeGen();
 
 		// 发生时钟回拨
 		if (timestamp < lastTimestamp) {
-			return blockMoveState;
+			throw new RuntimeException("snowflake clock move back!");
 		}
 
 		// 当前毫秒产生的ID不足，阻塞到下一毫秒
@@ -80,7 +79,7 @@ public final class SnowflakeWorker {
 
 		// 已到过期时间
 		if(expiredAt <= timestamp) {
-			return expiredState;
+			throw new RuntimeException("snowflake expire at " + this.expiredAt + "!");
 		}
 
 		// 更新最后一次时间
